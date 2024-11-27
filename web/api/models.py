@@ -4,13 +4,16 @@ from django.db import models
 
 class Tag(models.Model):
     name = models.CharField(max_length=50)
+    name_en = models.CharField(max_length=50, null=True, blank=True)  # 英文标签名
 
     def __str__(self):
         return self.name
 
 class Dish(models.Model):
     name = models.CharField(max_length=100)
+    name_en = models.CharField(max_length=100, null=True, blank=True)  # 英文名称
     description = models.TextField()
+    description_en = models.TextField(null=True, blank=True)  # 英文描述
     tags = models.ManyToManyField(Tag, related_name='dishes')
 
     def __str__(self):
