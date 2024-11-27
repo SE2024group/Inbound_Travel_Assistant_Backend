@@ -72,9 +72,10 @@ class OCRView(APIView):
             # image = Image.open(io.BytesIO(image_data))
             # image_path = os.path.join('./', f'{uuid.uuid4()}.png')
             # image.save(image_path)
-            # # 获取图片的 MIME 类型
-            # content_type = image.content_type  # e.g., 'image/jpeg'
-            # print(content_type)
+
+            # 获取图片的 MIME 类型
+            content_type = image.content_type  # e.g., 'image/jpeg'
+            print(content_type)
 
             
             # 调用 OCR API

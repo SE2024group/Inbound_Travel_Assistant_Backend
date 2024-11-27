@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: ./web
+    container_name: django_backend
+    volumes:
+      - static_volume:/app/static
+    expose:
+      - "8000"
+    networks:
+      - backend_network
+
+  nginx:
+    build:
+      context: ./nginx
+    container_name: nginx_proxy
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+    volumes:
+      - static_volume:/app/static
+    networks:
+      - backend_network
+
+volumes:
+  static_volume:
+
+networks:
+  backend_network:
+    driver: bridge
