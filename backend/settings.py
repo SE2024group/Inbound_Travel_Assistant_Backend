@@ -11,21 +11,32 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# 初始化环境变量
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+
+# 读取 .env 文件
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-8$n(#1(8=6=rszs-9dfidiod77&dc!qfkrxy067x*1k*^7)!g4'
+SECRET_KEY = 'django-insecure-)_h+!0pq7k=9#3_wttc(%)@e(-xb!8@8h%qlk%ou$6ho0%%l)j'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# backend/backend/settings.py
+
+ALLOWED_HOSTS = ['1.15.174.177', 'localhost', '127.0.0.1','apd-ugcvlive.apdcdn.tc.qq.com']
 
 
 # Application definition
@@ -37,6 +48,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -115,7 +128,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
