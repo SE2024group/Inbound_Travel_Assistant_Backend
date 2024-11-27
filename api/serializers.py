@@ -21,3 +21,23 @@ class ErrorResponseSerializer(serializers.Serializer):
 
 class OCRSerializer(serializers.Serializer):
     image = serializers.ImageField(required=True)
+
+from .models import Dish, Image, Tag
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ['id', 'name']
+
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Image
+        fields = ['image_url']
+
+class DishDetailSerializer(serializers.ModelSerializer):
+    images = ImageSerializer(many=True, read_only=True)
+    tags = TagSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Dish
+        fields = ['id', 'name', 'description', 'images', 'tags']

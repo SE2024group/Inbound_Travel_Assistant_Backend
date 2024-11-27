@@ -58,39 +58,28 @@ class UserInfoView(APIView):
 
 
 class OCRView(APIView):
+    
     def post(self, request):
         serializer = OCRSerializer(data=request.data)
         if serializer.is_valid():
             image = serializer.validated_data['image']
 
-            # unique_filename = f"{uuid.uuid4().hex}_{image.name}"
-            # upload_path = os.path.join('/home/ubuntu/simple_backend/backend/static/image', unique_filename)
-
-            # # 确保上传目录存在
-            # os.makedirs(os.path.dirname(upload_path), exist_ok=True)
-
-            # # 保存文件
-            # with open(upload_path, 'wb+') as destination:
-            #     for chunk in image.chunks():
-            #         destination.write(chunk)
-
-            # print(f"Image saved to {upload_path}")  # 调试信息
-
-            # 将图片转换为 Base64 编码
-            default_image_path = os.path.join(settings.BASE_DIR, 'static', 'image', 'default.png')
-            with open(default_image_path, 'rb') as f:
-                image = f
             image_content = image.read()
             base64_image = base64.b64encode(image_content).decode('utf-8')
 
-            # 获取图片的 MIME 类型
-            content_type = image.content_type  # e.g., 'image/jpeg'
-            print(content_type)
+            # # 将 base64 编码的图像转换为 PNG 格式并保存在本地
+            # image_data = base64.b64decode(base64_image)
+            # image = Image.open(io.BytesIO(image_data))
+            # image_path = os.path.join('./', f'{uuid.uuid4()}.png')
+            # image.save(image_path)
+            # # 获取图片的 MIME 类型
+            # content_type = image.content_type  # e.g., 'image/jpeg'
+            # print(content_type)
 
             
             # 调用 OCR API
             ocr_api_url = 'https://api.ocr.space/parse/image'
-            api_key = 'K82943261788957'  # 请将此替换为您的实际 API 密钥
+            api_key = 'K82943261788957' 
 
             payload = {
                 'language': 'chs',  # 中文简体
@@ -105,6 +94,7 @@ class OCRView(APIView):
                 response = requests.post(ocr_api_url, data=payload, headers=headers, timeout=30)
                 response.raise_for_status()
                 ocr_result = response.json()
+                print(ocr_result)
             except requests.RequestException as e:
                 return Response({'error': 'OCR API request failed'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -124,8 +114,8 @@ class OCRView(APIView):
 
                 for line in lines:
                     line_text = line.get('LineText', '')
-                    # 过滤 LineText 长度 < 3 或 > 5 的行
-                    if 3 <= len(line_text) <= 5:
+                    # 过滤 LineText 长度 < 3 或 > 8 的行
+                    if 3 <= len(line_text) <= 8:
                         words = line.get('Words', [])
                         if words:
                             # 计算 bounding_box
@@ -150,6 +140,22 @@ class OCRView(APIView):
                             result_data.append(data_item)
 
             # 返回新的数据包
-            return Response({'results': ocr_result}, status=status.HTTP_200_OK)
+            print(result_data)
+            return Response({'results': result_data}, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+from .models import Dish
+from .serializers import DishDetailSerializer
+
+class DishDetailView(APIView):
+    def get(self, request, id):
+        try:
+            dish = Dish.objects.get(id=id)
+        except Dish.DoesNotExist:
+            return Response({'error': 'Dish not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = DishDetailSerializer(dish)
+        return Response(serializer.data, status=status.HTTP_200_OK) 
