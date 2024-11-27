@@ -115,8 +115,8 @@ class OCRView(APIView):
 
                 for line in lines:
                     line_text = line.get('LineText', '')
-                    # 过滤 LineText 长度 < 3 或 > 8 的行
-                    if 3 <= len(line_text) <= 8:
+                    # 过滤 LineText 长度 < 3 或 > 8 的行, 以及linetext中有非汉字的行
+                    if 3 <= len(line_text) <= 8 and all('\u4e00' <= char <= '\u9fff' for char in line_text):
                         words = line.get('Words', [])
                         if words:
                             # 计算 bounding_box
