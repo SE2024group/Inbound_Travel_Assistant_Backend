@@ -80,7 +80,7 @@ class OCRView(APIView):
             
             # 调用 OCR API
             ocr_api_url = 'https://api.ocr.space/parse/image'
-            api_key = 'K82943261788957' 
+            api_key = settings.OCR_API_KEY
 
             payload = {
                 'language': 'chs',  # 中文简体

@@ -27,7 +27,7 @@ from .models import Dish, Image, Tag
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'name_en']
 
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -40,4 +40,12 @@ class DishDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Dish
-        fields = ['id', 'name', 'description', 'images', 'tags']
+        fields = [
+            'id', 
+            'name', 
+            'name_en', 
+            'description', 
+            'description_en', 
+            'images', 
+            'tags'
+        ]
