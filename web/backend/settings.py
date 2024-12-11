@@ -31,7 +31,9 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-)_h+!0pq7k=9#3_wttc(%)@e(-xb!8@8h%qlk%ou$6ho0%%l)j'
 OCR_API_KEY = env('OCR_API_KEY')
-
+# 读取环境变量
+COLA_KEY = env('COLA_KEY')
+TRANSLATE_API_URL = env('TRANSLATE_API_URL')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
