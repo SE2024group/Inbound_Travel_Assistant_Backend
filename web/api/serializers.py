@@ -15,9 +15,7 @@ class EchoSerializer(serializers.Serializer):
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
-
     password = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
-
 
 class LoginResponseSerializer(serializers.Serializer):
     token = serializers.CharField()
@@ -129,7 +127,28 @@ class LoginSerializer(serializers.Serializer):
         return attrs
 
 
+from django.core.validators import FileExtensionValidator
+
 class VoiceTranslationSerializer(serializers.Serializer):
-    voice_file = serializers.FileField(required=True, allow_empty_file=False, help_text="上传语音文件")
-    isChineseMode = serializers.BooleanField(required=True, help_text="是否为中文模式")
+    voice_file = serializers.FileField(
+        required=True,
+        allow_empty_file=False,
+        help_text="上传语音文件",
+        validators=[
+            FileExtensionValidator(allowed_extensions=['wav', 'mp3', 'm4a']),
+        ]
+    )
+    isChineseMode = serializers.BooleanField(
+        required=True,
+        help_text="是否为中文模式"
+    )
+
+    def validate_voice_file(self, value):
+        max_size = 20 * 1024 * 1024  # 10MB
+        min_size = 1024
+        if value.size > max_size:
+            raise serializers.ValidationError("文件大小超过限制（10MB）。")
+        if value.size < min_size:
+            raise serializers.ValidationError("文件大小不足（1KB）。")
+        return value
 

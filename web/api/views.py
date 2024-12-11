@@ -5,11 +5,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import EchoSerializer, LoginSerializer, LoginResponseSerializer, UserInfoSerializer, OCRSerializer
 from django.conf import settings
-
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from django.contrib.auth import get_user_model
-
 from PIL import Image
 import uuid
 import base64
@@ -17,6 +15,7 @@ import requests
 import io
 import os
 import random
+
 User = get_user_model()
 
 
@@ -27,7 +26,6 @@ class EchoView(APIView):
             username = serializer.validated_data['username']
             return Response({'username': username}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -145,7 +143,6 @@ class OCRView(APIView):
     authentication_classes = [TokenAuthentication, SessionAuthentication]
     permission_classes = [AllowAny]
 
-
     def post(self, request):
         serializer = OCRSerializer(data=request.data)
         if serializer.is_valid():
@@ -213,9 +210,7 @@ class OCRView(APIView):
 
                         # 当前字符是中文，尝试匹配长度在2到6之间的子串
                         matched = False
-
                         for sub_len in range(6, 1, -1):  # 优先尝试较长的子串
-
                             if i + sub_len <= len(line_text):
                                 sub_str = line_text[i:i+sub_len]
 
@@ -245,7 +240,6 @@ class OCRView(APIView):
                                     }
 
                                     # 获取菜品图片
-
                                     image_url = ''
                                     if dish.images.exists():
                                         image_url = dish.images.first().image_url
@@ -258,11 +252,9 @@ class OCRView(APIView):
                                         'bounding_box': bounding_box
                                     })
 
-
                                     # 如果用户已认证，记录浏览历史
                                     if request.user.is_authenticated:
                                         BrowsingHistory.objects.create(user=request.user, dish=dish)
-
 
                                     # 匹配成功后，从下一个子串结束的位置继续
                                     i += sub_len
@@ -298,38 +290,92 @@ class DishDetailView(APIView):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
+import tempfile
+import whisper
+from opencc import OpenCC
 from .serializers import VoiceTranslationSerializer
+import logging
+from .utils import translate_text  # 导入翻译函数
+
+# 初始化转换器，从繁体中文转换到简体中文
+converter = OpenCC('t2s')
+
+# 加载 Whisper 模型（CPU 版本）
+model = whisper.load_model("base")  # "base" 模型适用于 CPU，较小且速度较快
+logger = logging.getLogger(__name__)
 
 class VoiceTranslationView(APIView):
     """
     语音翻译公开 API 端点。
-    接受语音文件和 isChineseMode 参数，返回固定的文字结果。
+    接受语音文件和 isChineseMode 参数，返回中英文文字结果。
     """
-    # 允许所有用户访问，包括匿名用户
-    permission_classes = []  # 或者使用 [AllowAny]
+    permission_classes = [AllowAny]
 
     def post(self, request, format=None):
         serializer = VoiceTranslationSerializer(data=request.data)
         if serializer.is_valid():
             voice_file = serializer.validated_data['voice_file']
             is_chinese_mode = serializer.validated_data['isChineseMode']
+
+            print("is_chinese_mode:", is_chinese_mode)
             
-            # 这里暂时不实现实际的语音识别逻辑，直接返回固定的文字
-            response_data = {
-                "code": 200,
-                "message": "上传成功",
-                "data": {
-                    "text": "这是服务器返回的文本内容",
-                    "isChineseMode": is_chinese_mode
+            # 使用临时文件保存上传的语音文件
+            with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(voice_file.name)[1]) as temp_file:
+                for chunk in voice_file.chunks():
+                    temp_file.write(chunk)
+                temp_file_path = temp_file.name
+            
+            try:
+                # 选择语言
+                language = "zh" if is_chinese_mode else "en"
+                
+                # 使用 Whisper 模型进行转录
+                result = model.transcribe(temp_file_path, language=language)
+                transcribed_text = result['text'].strip()
+                
+                # 如果是中文模式，进行简繁体转换
+                if is_chinese_mode:
+                    transcribed_text = converter.convert(transcribed_text)
+                
+                print(f"Transcribed text: {transcribed_text}")
+
+                logger.info(f"Transcribed text: {transcribed_text}")
+                
+                # 调用翻译 API 将文本翻译成目标语言
+                # 如果 isChineseMode 是 True，翻译到英文；否则翻译到中文
+                if is_chinese_mode:
+                    translated_text = translate_text(transcribed_text, from_lang="ZH", to_lang="EN")
+                else:
+                    translated_text = translate_text(transcribed_text, from_lang="EN", to_lang="ZH")
+                
+                print(f"Translated text: {translated_text}")
+                
+                response_data = {
+                    "code": 200,
+                    "message": "上传成功",
+                    "data": {
+                        "cn_text": transcribed_text if is_chinese_mode else translated_text,
+                        "en_text": transcribed_text if not is_chinese_mode else translated_text,
+                        "isChineseMode": is_chinese_mode
+                    }
                 }
-            }
-            return Response(response_data, status=status.HTTP_200_OK)
+                                
+                return Response(response_data, status=status.HTTP_200_OK)
+            
+            except Exception as e:
+                logger.error(f"Error during voice transcription or translation: {str(e)}")
+                return Response({
+                    "code": 500,
+                    "message": "服务器内部错误",
+                    "errors": str(e)
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            finally:
+                # 删除临时文件
+                os.remove(temp_file_path)
         else:
-            # 返回序列化器的错误信息
+            logger.warning(f"Voice translation upload failed: {serializer.errors}")
             return Response({
                 "code": 400,
                 "message": "上传失败",
                 "errors": serializer.errors
             }, status=status.HTTP_400_BAD_REQUEST)
-
