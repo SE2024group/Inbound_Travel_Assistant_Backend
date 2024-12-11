@@ -3,11 +3,21 @@
 from rest_framework import serializers
 import uuid
 
+from django.contrib.auth import get_user_model
+from .models import Dish, Image, Tag, BrowsingHistory, LikeHistory, FavoriteHistory, CommentHistory
+
+
+User = get_user_model()
+
+
 class EchoSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
+
+    password = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
+
 
 class LoginResponseSerializer(serializers.Serializer):
     token = serializers.CharField()
@@ -49,3 +59,77 @@ class DishDetailSerializer(serializers.ModelSerializer):
             'images', 
             'tags'
         ]
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'nickname', 'avatar', 'personality_description']
+        read_only_fields = ['id']
+
+class BrowsingHistorySerializer(serializers.ModelSerializer):
+    dish = serializers.StringRelatedField()
+
+    class Meta:
+        model = BrowsingHistory
+        fields = ['id', 'dish', 'timestamp']
+        read_only_fields = ['id', 'timestamp']
+
+class LikeHistorySerializer(serializers.ModelSerializer):
+    dish = serializers.StringRelatedField()
+
+    class Meta:
+        model = LikeHistory
+        fields = ['id', 'dish', 'timestamp']
+        read_only_fields = ['id', 'timestamp']
+
+class FavoriteHistorySerializer(serializers.ModelSerializer):
+    dish = serializers.StringRelatedField()
+
+    class Meta:
+        model = FavoriteHistory
+        fields = ['id', 'dish', 'timestamp']
+        read_only_fields = ['id', 'timestamp']
+
+class CommentHistorySerializer(serializers.ModelSerializer):
+    dish = serializers.StringRelatedField()
+
+    class Meta:
+        model = CommentHistory
+        fields = ['id', 'dish', 'comment', 'timestamp']
+        read_only_fields = ['id', 'timestamp']
+
+class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
+    password2 = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
+
+    class Meta:
+        model = User
+        fields = ['username', 'password', 'password2', 'nickname', 'avatar', 'personality_description']
+
+    def validate(self, attrs):
+        if attrs['password'] != attrs['password2']:
+            raise serializers.ValidationError({"password": "Password fields didn't match."})
+        return attrs
+
+    def create(self, validated_data):
+        validated_data.pop('password2')
+        user = User.objects.create_user(**validated_data)
+        return user
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField(required=True)
+    password = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
+
+    def validate(self, attrs):
+        from django.contrib.auth import authenticate
+        user = authenticate(username=attrs['username'], password=attrs['password'])
+        if not user:
+            raise serializers.ValidationError("Invalid username or password.")
+        attrs['user'] = user
+        return attrs
+
+
+class VoiceTranslationSerializer(serializers.Serializer):
+    voice_file = serializers.FileField(required=True, allow_empty_file=False, help_text="上传语音文件")
+    isChineseMode = serializers.BooleanField(required=True, help_text="是否为中文模式")
+

@@ -1,0 +1,954 @@
+[
+    {
+        "name": "泡菜",
+        "name_en": "Sichuan Pickles",
+        "description": "一种传统的四川开胃菜，将蔬菜在调味盐水中发酵，口味酸辣爽口。",
+        "description_en": "A traditional Sichuan appetizer made by fermenting vegetables in seasoned brine, giving them a tangy and spicy flavor.",
+        "tags": ["前菜", "素食", "发酵"],
+        "images": ["http://example.com/images/paocai1.jpg"]
+    },
+    {
+        "name": "水煮鱼",
+        "name_en": "Boiled Fish in Chili Oil",
+        "description": "经典的四川菜肴，鱼片在充满辣椒和花椒的麻辣汤中煮制，鱼肉鲜嫩。",
+        "description_en": "A classic Sichuan dish featuring tender slices of fish poached in a spicy and numbing broth filled with chili peppers and Sichuan peppercorns.",
+        "tags": ["主菜", "海鲜", "辣", "麻", "含花椒"],
+        "images": ["http://example.com/images/shuizhuyu1.jpg"]
+    },
+    {
+        "name": "香辣牛蛙",
+        "name_en": "Spicy Bullfrog",
+        "description": "牛蛙肉与香辣酱炒制，常伴有辣椒和香料，口感独特。",
+        "description_en": "Bullfrog meat stir-fried with a fragrant and spicy sauce, often featuring chili peppers and aromatic spices.",
+        "tags": ["主菜", "肉类", "辣", "含花椒"],
+        "images": ["http://example.com/images/xianglaniuwa1.jpg"]
+    },
+    {
+        "name": "毛血旺",
+        "name_en": "Mao Xue Wang",
+        "description": "以鸭血、毛肚等食材为主料的麻辣火锅，味道鲜香麻辣。",
+        "description_en": "A spicy hot pot dish featuring duck blood, tripe, and other ingredients, with a savory and numbing flavor.",
+        "tags": ["主菜", "辣", "麻", "含花椒"],
+        "images": ["http://example.com/images/maoxuewang1.jpg"]
+    },
+    {
+        "name": "水煮牛肉",
+        "name_en": "Boiled Beef in Chili Oil",
+        "description": "嫩滑的牛肉片在麻辣的汤汁中煮制，香气四溢。",
+        "description_en": "Tender slices of beef poached in a spicy and numbing broth, releasing a rich aroma.",
+        "tags": ["主菜", "肉类", "辣", "麻", "含花椒"],
+        "images": ["http://example.com/images/shuizhuniurou1.jpg"]
+    },
+    {
+        "name": "水煮肉片",
+        "name_en": "Boiled Pork Slices in Chili Oil",
+        "description": "薄切猪肉在麻辣汤汁中煮制，鲜香辛辣。",
+        "description_en": "Thinly sliced pork poached in a spicy and numbing broth, offering a savory and hot flavor.",
+        "tags": ["主菜", "肉类", "辣", "麻", "含花椒", "猪肉"],
+        "images": ["http://example.com/images/shuizhuroupian1.jpg"]
+    },
+    {
+        "name": "香辣虾",
+        "name_en": "Spicy Shrimp",
+        "description": "鲜虾与香辣酱炒制，味道鲜美辛辣。",
+        "description_en": "Fresh shrimp stir-fried with a spicy and fragrant sauce, offering a delicious and hot flavor.",
+        "tags": ["主菜", "海鲜", "辣", "含花椒"],
+        "images": ["http://example.com/images/xianglaxi1.jpg"]
+    },
+    {
+        "name": "辣子鸡",
+        "name_en": "Spicy Chicken",
+        "description": "鸡肉与大量辣椒和花椒炒制，香脆麻辣。",
+        "description_en": "Chicken stir-fried with a large amount of chili peppers and Sichuan peppercorns, resulting in a crispy and numbing spiciness.",
+        "tags": ["主菜", "肉类", "辣", "麻", "含花椒"],
+        "images": ["http://example.com/images/laziji1.jpg"]
+    },
+    {
+        "name": "香辣肥肠",
+        "name_en": "Spicy Pork Intestines",
+        "description": "猪肥肠与香辣酱炒制，口感丰富麻辣。",
+        "description_en": "Pork intestines stir-fried with a spicy and fragrant sauce, offering a rich and numbing flavor.",
+        "tags": ["主菜", "肉类", "辣", "麻", "含花椒", "猪肉"],
+        "images": ["http://example.com/images/xianglafichang1.jpg"]
+    },
+    {
+        "name": "豆花",
+        "name_en": "Tofu Pudding",
+        "description": "嫩滑的豆腐配以特制的调料，口感细腻。",
+        "description_en": "Silky tofu served with special seasonings, offering a delicate texture.",
+        "tags": ["前菜", "素食", "汤"],
+        "images": ["http://example.com/images/douhua1.jpg"]
+    },
+    {
+        "name": "蒜泥白肉",
+        "name_en": "Garlic Pork Slices",
+        "description": "薄切猪肉配以蒜泥和特制酱料，鲜香微辣。",
+        "description_en": "Thinly sliced pork served with garlic paste and special sauces, offering a savory and mildly spicy flavor.",
+        "tags": ["前菜", "肉类", "辣", "含蒜", "猪肉"],
+        "images": ["http://example.com/images/suanmibaierou1.jpg"]
+    },
+    {
+        "name": "回锅肉",
+        "name_en": "Twice-Cooked Pork",
+        "description": "煮熟后再炒制的猪肉片，香气浓郁。",
+        "description_en": "Pork slices first boiled and then stir-fried, resulting in a rich aroma.",
+        "tags": ["主菜", "肉类", "发酵", "猪肉"],
+        "images": ["http://example.com/images/huiguorou1.jpg"]
+    },
+    {
+        "name": "鱼香肉丝",
+        "name_en": "Yu Xiang Shredded Pork",
+        "description": "猪肉丝配以鱼香酱料，酸甜辛辣。",
+        "description_en": "Shredded pork served with Yu Xiang sauce, offering a sweet, sour, and spicy flavor.",
+        "tags": ["主菜", "肉类", "辣", "酸", "含蒜", "猪肉"],
+        "images": ["http://example.com/images/yuxiangrousi1.jpg"]
+    },
+    {
+        "name": "鸡杂",
+        "name_en": "Chicken Offal",
+        "description": "多种鸡内脏炖煮，香辣可口。",
+        "description_en": "Various chicken offal stewed in a spicy broth, offering a flavorful taste.",
+        "tags": ["主菜", "肉类", "辣", "麻", "含花椒"],
+        "images": ["http://example.com/images/jiza1.jpg"]
+    },
+    {
+        "name": "麻婆豆腐",
+        "name_en": "Mapo Tofu",
+        "description": "嫩豆腐与牛肉末在麻辣酱汁中煮制，鲜香麻辣。",
+        "description_en": "Silky tofu cooked with ground beef in a spicy and numbing sauce, offering a savory and hot flavor.",
+        "tags": ["主菜", "素食", "辣", "麻", "含花椒", "含蒜"],
+        "images": ["http://example.com/images/mapodoufu1.jpg"]
+    },
+    {
+        "name": "麻辣鸭血",
+        "name_en": "Spicy Duck Blood",
+        "description": "鸭血与蔬菜在麻辣汤汁中煮制，鲜香麻辣。",
+        "description_en": "Duck blood cooked with vegetables in a spicy and numbing broth, offering a fresh and hot flavor.",
+        "tags": ["主菜", "辣", "麻", "含花椒", "发酵"],
+        "images": ["http://example.com/images/maladayaxue1.jpg"]
+    },
+    {
+        "name": "烤鸭",
+        "name_en": "Peking Duck",
+        "description": "北京传统名菜，以外脆里嫩的鸭肉著称，常搭配荷叶饼、葱和甜面酱。",
+        "description_en": "A traditional Beijing dish famous for its crispy skin and tender meat, typically served with thin pancakes, scallions, and sweet bean sauce.",
+        "tags": ["主菜", "肉类"],
+        "images": ["http://example.com/images/pekingduck.jpg"]
+    },
+    {
+        "name": "炸酱面",
+        "name_en": "Beijing Noodles with Soybean Paste",
+        "description": "以面条拌以黄豆酱和炒制的肉末，搭配黄瓜丝等配料。",
+        "description_en": "Noodles served with soybean paste and stir-fried minced pork, accompanied by cucumber slices and other toppings.",
+        "tags": ["主菜",   "含大豆", "含蒜"],
+        "images": ["http://example.com/images/zhajiangmian.jpg"]
+    },
+    {
+        "name": "豆汁",
+        "name_en": "Fermented Mung Bean Juice",
+        "description": "北京传统饮品，味道独特，有酸味，通常搭配焦圈食用。",
+        "description_en": "A traditional Beijing beverage with a unique sour flavor, often paired with crispy fried rings (Jiao Quan).",
+        "tags": ["饮品", "发酵", "素食"],
+        "images": ["http://example.com/images/douzhir.jpg"]
+    },
+    {
+        "name": "涮羊肉",
+        "name_en": "Beijing Lamb Hot Pot",
+        "description": "北京冬季常见的火锅料理，羊肉片在沸腾的锅中涮熟后蘸酱食用。",
+        "description_en": "A popular winter dish in Beijing, featuring thinly sliced lamb cooked in a boiling pot and dipped in sauces.",
+        "tags": ["主菜", "火锅", "肉类", "清真"],
+        "images": ["http://example.com/images/shuanyangrou.jpg"]
+    },
+    {
+        "name": "卤煮",
+        "name_en": "Beijing Stewed Offal",
+        "description": "以猪肠、肺等下水为主料，搭配豆腐和蒜汁，味道浓郁。",
+        "description_en": "A hearty stew made with pork intestines, lungs, tofu, and garlic sauce, offering a rich flavor.",
+        "tags": ["主菜", "肉类", "含蒜", "猪肉"],
+        "images": ["http://example.com/images/luzhu.jpg"]
+    },
+    {
+        "name": "芥末墩",
+        "name_en": "Mustard Cabbage",
+        "description": "以芥末和醋腌制白菜，味道辛辣酸爽，是一道北京特色凉菜。",
+        "description_en": "A Beijing-style cold dish made with cabbage pickled in mustard and vinegar, offering a spicy and tangy flavor.",
+        "tags": ["前菜", "素食", "酸"],
+        "images": ["http://example.com/images/jiemodun.jpg"]
+    },
+    {
+        "name": "京酱肉丝",
+        "name_en": "Beijing Shredded Pork in Sweet Bean Sauce",
+        "description": "猪肉丝炒制后淋上京酱，搭配豆皮或荷叶饼食用，味道鲜美。",
+        "description_en": "Shredded pork stir-fried and coated with sweet bean sauce, typically served with tofu skin or pancakes.",
+        "tags": ["主菜", "肉类", "含大豆", "猪肉"],
+        "images": ["http://example.com/images/jingjiangrousi.jpg"]
+    },
+    {
+        "name": "炒肝",
+        "name_en": "Beijing Fried Liver",
+        "description": "猪肝与大肠一起煮制成汤，口感浓郁，是北京传统早点之一。",
+        "description_en": "A traditional Beijing breakfast dish featuring pork liver and intestines cooked into a thick soup.",
+        "tags": ["汤", "肉类", "猪肉"],
+        "images": ["http://example.com/images/chaogan.jpg"]
+    },
+    {
+        "name": "烙饼卷带鱼",
+        "name_en": "Pancakes with Braised Hairtail",
+        "description": "将酥软入味的带鱼与烙饼一起卷食，是一道家常北京菜。",
+        "description_en": "Braised hairtail with a soft texture, rolled with pancakes, is a classic Beijing home-style dish.",
+        "tags": ["主菜", "海鲜"],
+        "images": ["http://example.com/images/laobingyu.jpg"]
+    },
+    {
+        "name": "焦圈",
+        "name_en": "Crispy Fried Rings",
+        "description": "一种北京特色小吃，外酥内软，常与豆汁搭配。",
+        "description_en": "A Beijing specialty snack, crispy on the outside and soft inside, often paired with fermented mung bean juice.",
+        "tags": ["小吃", "素食", "油炸"],
+        "images": ["http://example.com/images/jiaoquan.jpg"]
+    },
+    {
+        "name": "豆腐乳",
+        "name_en": "Fermented Tofu",
+        "description": "一种大豆制品，经过发酵后味道浓郁，常作为佐餐小菜。",
+        "description_en": "A soybean product fermented for a rich flavor, commonly served as a side dish.",
+        "tags": ["前菜", "素食", "发酵", "含大豆"],
+        "images": ["http://example.com/images/doufurur.jpg"]
+    },
+    {
+        "name": "素鸡",
+        "name_en": "Vegetarian Chicken",
+        "description": "以豆腐皮卷制成的仿荤菜，口感嫩滑，是素食者的佳品。",
+        "description_en": "A mock meat dish made from tofu skin, offering a tender texture, perfect for vegetarians.",
+        "tags": ["主菜", "素食", "含大豆"],
+        "images": ["http://example.com/images/suji.jpg"]
+    },
+    {
+        "name": "豆腐脑",
+        "name_en": "Tofu Pudding",
+        "description": "用大豆制成的嫩豆腐，配以咸味或甜味调料。",
+        "description_en": "A tender tofu dish made from soybeans, served with savory or sweet toppings.",
+        "tags": ["汤", "素食", "含大豆"],
+        "images": ["http://example.com/images/doufuna.jpg"]
+    },
+    {
+        "name": "油炸豆腐",
+        "name_en": "Fried Tofu",
+        "description": "外酥里嫩的油炸豆腐，可蘸酱食用或入菜。",
+        "description_en": "Crispy on the outside and tender inside, fried tofu can be dipped in sauce or added to dishes.",
+        "tags": ["主菜", "素食", "油炸", "含大豆"],
+        "images": ["http://example.com/images/youzhadoufu.jpg"]
+    },
+    {
+        "name": "酱香豆腐",
+        "name_en": "Soy Sauce Braised Tofu",
+        "description": "豆腐经过酱油和香料炖煮，味道鲜美入味。",
+        "description_en": "Tofu braised with soy sauce and spices, offering a flavorful taste.",
+        "tags": ["主菜", "素食", "发酵", "含大豆"],
+        "images": ["http://example.com/images/jiangxiangdoufu.jpg"]
+    },
+    {
+        "name": "麻辣豆腐",
+        "name_en": "Spicy Tofu",
+        "description": "豆腐与辣椒和花椒一起炒制，口感麻辣鲜香。",
+        "description_en": "Tofu stir-fried with chili peppers and Sichuan peppercorns, delivering a spicy and numbing flavor.",
+        "tags": ["主菜", "素食", "辣", "麻", "含大豆"],
+        "images": ["http://example.com/images/maladoufua.jpg"]
+    },
+    {
+        "name": "豆腐羹",
+        "name_en": "Tofu Soup",
+        "description": "以嫩豆腐为主料，搭配蔬菜煮制而成的清淡汤品。",
+        "description_en": "A light soup made with tender tofu and vegetables.",
+        "tags": ["汤", "素食", "含大豆"],
+        "images": ["http://example.com/images/doufugeng.jpg"]
+    },
+    {
+        "name": "豆豉蒸排骨",
+        "name_en": "Steamed Pork Ribs with Fermented Black Beans",
+        "description": "排骨搭配豆豉蒸制，豆豉的香味渗入肉中，味道浓郁。",
+        "description_en": "Pork ribs steamed with fermented black beans, infusing the meat with rich flavors.",
+        "tags": ["主菜", "肉类", "发酵", "含大豆"],
+        "images": ["http://example.com/images/douchipaigu.jpg"]
+    },
+    {
+        "name": "豆瓣鱼",
+        "name_en": "Fish with Fermented Broad Bean Paste",
+        "description": "以豆瓣酱为主要调料的鱼类菜肴，味道浓郁鲜香。",
+        "description_en": "A fish dish flavored with fermented broad bean paste, offering a rich and savory taste.",
+        "tags": ["主菜", "海鲜", "发酵", "含大豆"],
+        "images": ["http://example.com/images/doubanfish.jpg"]
+    },
+    {
+        "name": "豆腐锅",
+        "name_en": "Tofu Hot Pot",
+        "description": "以豆腐为主料的火锅，搭配多种蔬菜和酱料，清淡可口。",
+        "description_en": "A hot pot dish with tofu as the main ingredient, paired with various vegetables and sauces.",
+        "tags": ["主菜", "火锅", "素食", "含大豆"],
+        "images": ["http://example.com/images/doufuhotpot.jpg"]
+    },
+    {
+        "name": "泡菜",
+        "name_en": "Sichuan Pickles",
+        "description": "一种传统的四川开胃菜，将蔬菜在调味盐水中发酵，口味酸辣爽口。",
+        "description_en": "A traditional Sichuan appetizer made by fermenting vegetables in seasoned brine, giving them a tangy and spicy flavor.",
+        "tags": ["前菜", "素食", "发酵"],
+        "images": ["http://example.com/images/paocai1.jpg"]
+    },
+    {
+        "name": "水煮鱼",
+        "name_en": "Boiled Fish in Chili Oil",
+        "description": "经典的四川菜肴，鱼片在充满辣椒和花椒的麻辣汤中煮制，鱼肉鲜嫩。",
+        "description_en": "A classic Sichuan dish featuring tender slices of fish poached in a spicy and numbing broth filled with chili peppers and Sichuan peppercorns.",
+        "tags": ["主菜", "海鲜", "辣", "麻", "含花椒"],
+        "images": ["http://example.com/images/shuizhuyu1.jpg"]
+    },
+    {
+        "name": "香辣牛蛙",
+        "name_en": "Spicy Bullfrog",
+        "description": "牛蛙肉与香辣酱炒制，常伴有辣椒和香料，口感独特。",
+        "description_en": "Bullfrog meat stir-fried with a fragrant and spicy sauce, often featuring chili peppers and aromatic spices.",
+        "tags": ["主菜", "肉类", "辣", "含花椒"],
+        "images": ["http://example.com/images/xianglaniuwa1.jpg"]
+    },
+    {
+        "name": "毛血旺",
+        "name_en": "Mao Xue Wang",
+        "description": "以鸭血、毛肚等食材为主料的麻辣火锅，味道鲜香麻辣。",
+        "description_en": "A spicy hot pot dish featuring duck blood, tripe, and other ingredients, with a savory and numbing flavor.",
+        "tags": ["主菜", "辣", "麻", "含花椒"],
+        "images": ["http://example.com/images/maoxuewang1.jpg"]
+    },
+    {
+        "name": "水煮牛肉",
+        "name_en": "Boiled Beef in Chili Oil",
+        "description": "嫩滑的牛肉片在麻辣的汤汁中煮制，香气四溢。",
+        "description_en": "Tender slices of beef poached in a spicy and numbing broth, releasing a rich aroma.",
+        "tags": ["主菜", "肉类", "辣", "麻", "含花椒"],
+        "images": ["http://example.com/images/shuizhuniurou1.jpg"]
+    },
+    {
+        "name": "水煮肉片",
+        "name_en": "Boiled Pork Slices in Chili Oil",
+        "description": "薄切猪肉在麻辣汤汁中煮制，鲜香辛辣。",
+        "description_en": "Thinly sliced pork poached in a spicy and numbing broth, offering a savory and hot flavor.",
+        "tags": ["主菜", "肉类", "辣", "麻", "含花椒", "猪肉"],
+        "images": ["http://example.com/images/shuizhuroupian1.jpg"]
+    },
+    {
+        "name": "香辣虾",
+        "name_en": "Spicy Shrimp",
+        "description": "鲜虾与香辣酱炒制，味道鲜美辛辣。",
+        "description_en": "Fresh shrimp stir-fried with a spicy and fragrant sauce, offering a delicious and hot flavor.",
+        "tags": ["主菜", "海鲜", "辣", "含花椒"],
+        "images": ["http://example.com/images/xianglaxi1.jpg"]
+    },
+    {
+        "name": "辣香辣鸡",
+        "name_en": "Spicy Chicken",
+        "description": "鸡肉与大量辣椒和花椒炒制，香脆麻辣。",
+        "description_en": "Chicken stir-fried with a large amount of chili peppers and Sichuan peppercorns, resulting in a crispy and numbing spiciness.",
+        "tags": ["主菜", "肉类", "辣", "麻", "含花椒"],
+        "images": ["http://example.com/images/laziji1.jpg"]
+    },
+    {
+        "name": "香辣肥肠",
+        "name_en": "Spicy Pork Intestines",
+        "description": "猪肥肠与香辣酱炒制，口感丰富麻辣。",
+        "description_en": "Pork intestines stir-fried with a spicy and fragrant sauce, offering a rich and numbing flavor.",
+        "tags": ["主菜", "肉类", "辣", "麻", "含花椒", "猪肉"],
+        "images": ["http://example.com/images/xianglafichang1.jpg"]
+    },
+    {
+        "name": "豆花",
+        "name_en": "Tofu Pudding",
+        "description": "嫩滑的豆腐配以特制的调料，口感细腻。",
+        "description_en": "Silky tofu served with special seasonings, offering a delicate texture.",
+        "tags": ["前菜", "素食", "汤"],
+        "images": ["http://example.com/images/douhua1.jpg"]
+    },
+    {
+        "name": "红烧牛肉盖饭",
+        "name_en": "Braised Beef Rice Bowl",
+        "description": "以嫩滑的红烧牛肉和香喷喷的米饭为主，口感丰富。",
+        "description_en": "A flavorful rice bowl topped with tender braised beef and fragrant rice.",
+        "tags": ["主菜", "肉类" ],
+        "images": ["http://example.com/images/braisedbeefrice.jpg"]
+    },
+    {
+        "name": "咖喱鸡盖饭",
+        "name_en": "Curry Chicken Rice Bowl",
+        "description": "以浓郁咖喱酱烹制的鸡肉和米饭，搭配蔬菜更添风味。",
+        "description_en": "A hearty rice bowl featuring chicken cooked in a rich curry sauce, served with vegetables.",
+        "tags": ["主菜", "肉类"],
+        "images": ["http://example.com/images/currychickenrice.jpg"]
+    },
+    {
+        "name": "鱼香茄子盖饭",
+        "name_en": "Yu Xiang Eggplant Rice Bowl",
+        "description": "鱼香风味的茄子搭配米饭，酸甜辛辣。",
+        "description_en": "A sweet, sour, and spicy rice bowl topped with Yu Xiang-style eggplant.",
+        "tags": ["主菜", "素食", "酸", "辣"],
+        "images": ["http://example.com/images/yuxiangeggplant.jpg"]
+    },
+    {
+        "name": "照烧鸡腿盖饭",
+        "name_en": "Teriyaki Chicken Rice Bowl",
+        "description": "酱香浓郁的照烧鸡腿配上蒸米饭，是一道经典的中日结合菜。",
+        "description_en": "A classic fusion dish of tender teriyaki chicken served with steamed rice.",
+        "tags": ["主菜", "肉类"  ],
+        "images": ["http://example.com/images/teriyakichicken.jpg"]
+    },
+    {
+        "name": "麻婆豆腐盖饭",
+        "name_en": "Mapo Tofu Rice Bowl",
+        "description": "经典麻婆豆腐配上热腾腾的米饭，麻辣鲜香。",
+        "description_en": "A classic Mapo Tofu dish served over hot rice, with a spicy and numbing flavor.",
+        "tags": ["主菜", "素食", "辣", "麻", "含花椒"],
+        "images": ["http://example.com/images/mapodoufurice.jpg"]
+    },
+    {
+        "name": "黑椒牛肉盖饭",
+        "name_en": "Black Pepper Beef Rice Bowl",
+        "description": "香辣黑椒牛肉搭配米饭，是一道受欢迎的快餐菜肴。",
+        "description_en": "A popular quick meal with spicy black pepper beef served over rice.",
+        "tags": ["主菜", "肉类", "辣"],
+        "images": ["http://example.com/images/blackpepperbeef.jpg"]
+    },
+    {
+        "name": "宫保鸡丁盖饭",
+        "name_en": "Kung Pao Chicken Rice Bowl",
+        "description": "经典川菜宫保鸡丁，配上白米饭，麻辣开胃。",
+        "description_en": "A classic Sichuan dish, Kung Pao Chicken, served with white rice, offering a spicy and tangy flavor.",
+        "tags": ["主菜", "肉类", "辣", "含花椒"],
+        "images": ["http://example.com/images/kungpaochickenrice.jpg"]
+    },
+    {
+        "name": "蒜蓉虾盖饭",
+        "name_en": "Garlic Shrimp Rice Bowl",
+        "description": "鲜虾炒蒜蓉，配上热腾腾的白米饭，美味十足。",
+        "description_en": "Fresh shrimp stir-fried with garlic, served with hot steamed rice, offering a rich flavor.",
+        "tags": ["主菜", "海鲜", "含蒜"],
+        "images": ["http://example.com/images/garlicshrimprice.jpg"]
+    },
+    {
+        "name": "豆豉蒸排骨盖饭",
+        "name_en": "Steamed Pork Ribs with Black Bean Sauce Rice Bowl",
+        "description": "豆豉蒸排骨与米饭的绝佳搭配，鲜香可口。",
+        "description_en": "Tender pork ribs steamed with black bean sauce, served over rice for a delightful meal.",
+        "tags": ["主菜", "肉类", "含大豆"],
+        "images": ["http://example.com/images/blackbeanribsrice.jpg"]
+    },
+    {
+        "name": "咕噜肉盖饭",
+        "name_en": "Sweet and Sour Pork Rice Bowl",
+        "description": "酸甜可口的咕噜肉搭配米饭，是一道经典粤菜。",
+        "description_en": "A classic Cantonese dish of sweet and sour pork served over rice.",
+        "tags": ["主菜", "肉类" , "酸", "猪肉"],
+        "images": ["http://example.com/images/sweetandsourporkrice.jpg"]
+    },
+    {
+        "name": "素什锦盖饭",
+        "name_en": "Mixed Vegetables Rice Bowl",
+        "description": "多种蔬菜炒制，搭配米饭，健康又美味。",
+        "description_en": "A healthy and delicious rice bowl topped with stir-fried mixed vegetables.",
+        "tags": ["主菜", "素食"],
+        "images": ["http://example.com/images/mixedvegetablerice.jpg"]
+    },
+    {
+        "name": "豆花",
+        "name_en": "Tofu Pudding",
+        "description": "嫩滑的豆腐配以特制的调料，口感细腻。",
+        "description_en": "Silky tofu served with special seasonings, offering a delicate texture.",
+        "tags": ["前菜", "素食", "汤"],
+        "images": ["http://example.com/images/douhua1.jpg"]
+    },
+    {
+        "name": "手切羊肉",
+        "name_en": "Hand-Sliced Lamb",
+        "description": "优质羊肉手工切片，适合涮火锅，口感鲜嫩。",
+        "description_en": "High-quality lamb hand-sliced for hot pot, offering a tender and fresh flavor.",
+        "tags": ["主菜", "肉类", "火锅", "清真"],
+        "images": ["http://example.com/images/shouqieyangrou.jpg"]
+    },
+    {
+        "name": "毛肚",
+        "name_en": "Beef Tripe",
+        "description": "牛毛肚切片，涮火锅时易入味，口感爽脆。",
+        "description_en": "Sliced beef tripe for hot pot, known for its crisp texture and flavor absorption.",
+        "tags": ["主菜", "肉类", "火锅"],
+        "images": ["http://example.com/images/maodu.jpg"]
+    },
+    {
+        "name": "虾滑",
+        "name_en": "Shrimp Paste",
+        "description": "由新鲜虾肉制成的虾滑，适合火锅料理。",
+        "description_en": "Fresh shrimp paste made from minced shrimp, perfect for hot pot.",
+        "tags": ["主菜", "海鲜", "火锅"],
+        "images": ["http://example.com/images/xiahua.jpg"]
+    },
+    {
+        "name": "豆腐皮",
+        "name_en": "Tofu Skin",
+        "description": "薄薄的豆腐皮，涮火锅时吸满汤汁，清香可口。",
+        "description_en": "Thin tofu skin for hot pot, soaking up broth and providing a delicate taste.",
+        "tags": ["主菜", "素食", "火锅", "大豆"],
+        "images": ["http://example.com/images/doufupi.jpg"]
+    },
+    {
+        "name": "鱼丸",
+        "name_en": "Fish Balls",
+        "description": "弹性十足的鱼丸，火锅必备食材。",
+        "description_en": "Bouncy fish balls, a must-have ingredient for hot pot.",
+        "tags": ["主菜", "海鲜", "火锅"],
+        "images": ["http://example.com/images/yuwan.jpg"]
+    },
+    {
+        "name": "肥牛卷",
+        "name_en": "Fatty Beef Slices",
+        "description": "切薄的肥牛肉卷，适合火锅，鲜嫩多汁。",
+        "description_en": "Thinly sliced fatty beef rolls, ideal for hot pot, tender and juicy.",
+        "tags": ["主菜", "肉类", "火锅"],
+        "images": ["http://example.com/images/feiniu.jpg"]
+    },
+    {
+        "name": "金针菇",
+        "name_en": "Enoki Mushrooms",
+        "description": "细长的金针菇，涮火锅时味道鲜美。",
+        "description_en": "Long enoki mushrooms, delicious when cooked in hot pot.",
+        "tags": ["主菜", "素食", "火锅"],
+        "images": ["http://example.com/images/jinzhengu.jpg"]
+    },
+    {
+        "name": "土豆片",
+        "name_en": "Potato Slices",
+        "description": "土豆切片，适合火锅，口感绵软入味。",
+        "description_en": "Thinly sliced potatoes for hot pot, soft and flavorful.",
+        "tags": ["主菜", "素食", "火锅"],
+        "images": ["http://example.com/images/tudoupian.jpg"]
+    },
+    {
+        "name": "午餐肉",
+        "name_en": "Spam",
+        "description": "火锅常见配料，咸香可口。",
+        "description_en": "A popular hot pot ingredient, savory and flavorful.",
+        "tags": ["主菜", "肉类", "火锅", "麸质"],
+        "images": ["http://example.com/images/wucanrou.jpg"]
+    },
+    {
+        "name": "鸭血",
+        "name_en": "Duck Blood",
+        "description": "鸭血块在火锅中煮熟后口感滑嫩。",
+        "description_en": "Duck blood cubes, smooth and tender after cooking in hot pot.",
+        "tags": ["主菜", "肉类", "火锅"],
+        "images": ["http://example.com/images/yaxue.jpg"]
+    },
+    {
+        "name": "鹌鹑蛋",
+        "name_en": "Quail Eggs",
+        "description": "小巧可爱的鹌鹑蛋，涮火锅时十分美味。",
+        "description_en": "Cute and tasty quail eggs, a delightful addition to hot pot.",
+        "tags": ["主菜", "素食", "火锅"],
+        "images": ["http://example.com/images/anchundan.jpg"]
+    },
+    {
+        "name": "西红柿炒鸡蛋",
+        "name_en": "Tomato and Egg Stir-fry",
+        "description": "家常菜的经典之一，将西红柿与鸡蛋炒制成香浓可口的一道菜。",
+        "description_en": "A classic home-style dish featuring stir-fried tomatoes and eggs, offering a savory and tangy flavor.",
+        "tags": ["主菜", "素食"],
+        "images": ["http://example.com/images/tomato_egg.jpg"]
+    },
+    {
+        "name": "青椒炒肉丝",
+        "name_en": "Stir-fried Pork with Green Peppers",
+        "description": "细切的猪肉与青椒同炒，口感鲜嫩，风味十足。",
+        "description_en": "Thinly sliced pork stir-fried with green peppers, offering a tender and flavorful experience.",
+        "tags": ["主菜", "肉类", "猪肉"],
+        "images": ["http://example.com/images/pork_green_pepper.jpg"]
+    },
+    {
+        "name": "蒜蓉空心菜",
+        "name_en": "Stir-fried Water Spinach with Garlic",
+        "description": "以空心菜为主料，加入蒜蓉炒制，清香爽口。",
+        "description_en": "Water spinach stir-fried with minced garlic, offering a light and refreshing taste.",
+        "tags": ["主菜", "素食", "含蒜"],
+        "images": ["http://example.com/images/water_spinach_garlic.jpg"]
+    },
+    {
+        "name": "辣炒鸡丁",
+        "name_en": "Spicy Stir-fried Chicken",
+        "description": "鸡肉丁与辣椒同炒，香辣入味。",
+        "description_en": "Diced chicken stir-fried with chili peppers, packed with spicy flavor.",
+        "tags": ["主菜", "肉类", "辣"],
+        "images": ["http://example.com/images/spicy_chicken.jpg"]
+    },
+    {
+        "name": "杏鲍菇炒牛肉",
+        "name_en": "Stir-fried Beef with King Oyster Mushrooms",
+        "description": "鲜嫩的牛肉片搭配杏鲍菇，味道鲜美，营养丰富。",
+        "description_en": "Tender beef slices stir-fried with king oyster mushrooms, offering a savory and nutritious dish.",
+        "tags": ["主菜", "肉类"],
+        "images": ["http://example.com/images/beef_mushroom.jpg"]
+    },
+    {
+        "name": "清炒西葫芦",
+        "name_en": "Stir-fried Zucchini",
+        "description": "西葫芦切片清炒，清淡可口。",
+        "description_en": "Sliced zucchini stir-fried for a light and tasty dish.",
+        "tags": ["主菜", "素食"],
+        "images": ["http://example.com/images/stir_fried_zucchini.jpg"]
+    },
+    {
+        "name": "豆角炒鸡蛋",
+        "name_en": "Stir-fried Eggs with Green Beans",
+        "description": "鸡蛋与豆角一同炒制，鲜香美味。",
+        "description_en": "Eggs stir-fried with green beans, offering a fragrant and delicious combination.",
+        "tags": ["主菜", "素食"],
+        "images": ["http://example.com/images/egg_green_beans.jpg"]
+    },
+    {
+        "name": "土豆片炒肉",
+        "name_en": "Stir-fried Pork with Potato Slices",
+        "description": "薄切土豆片与猪肉同炒，软嫩入味。",
+        "description_en": "Thinly sliced potatoes stir-fried with pork, delivering a soft and flavorful dish.",
+        "tags": ["主菜", "肉类", "猪肉"],
+        "images": ["http://example.com/images/potato_pork.jpg"]
+    },
+    {
+        "name": "韭菜炒虾仁",
+        "name_en": "Stir-fried Shrimp with Chives",
+        "description": "鲜虾仁与韭菜同炒，鲜香可口。",
+        "description_en": "Shrimp stir-fried with chives, offering a fresh and fragrant dish.",
+        "tags": ["主菜", "海鲜"],
+        "images": ["http://example.com/images/shrimp_chives.jpg"]
+    },
+    {
+        "name": "芹菜炒豆腐",
+        "name_en": "Stir-fried Tofu with Celery",
+        "description": "清脆的芹菜搭配豆腐，素食佳品。",
+        "description_en": "Crispy celery stir-fried with tofu, a delightful vegetarian dish.",
+        "tags": ["主菜", "素食"],
+        "images": ["http://example.com/images/celery_tofu.jpg"]
+    },
+    {
+        "name": "木耳炒鸡蛋",
+        "name_en": "Stir-fried Eggs with Black Fungus",
+        "description": "木耳与鸡蛋搭配炒制，鲜嫩清香。",
+        "description_en": "Black fungus stir-fried with eggs, offering a tender and fragrant dish.",
+        "tags": ["主菜", "素食"],
+        "images": ["http://example.com/images/egg_black_fungus.jpg"]
+    },
+    {
+        "name": "小鸡炖蘑菇",
+        "name_en": "Braised Chicken with Mushrooms",
+        "description": "鸡肉与鲜蘑菇炖煮入味，香气扑鼻。",
+        "description_en": "Chicken braised with fresh mushrooms, offering a rich aroma and savory taste.",
+        "tags": ["主菜", "肉类"],
+        "images": ["http://example.com/images/chicken_mushroom.jpg"]
+    },
+    {
+        "name": "青椒炒鸡蛋",
+        "name_en": "Stir-fried Eggs with Green Peppers",
+        "description": "青椒与鸡蛋搭配炒制，清新可口。",
+        "description_en": "Eggs stir-fried with green peppers, delivering a light and flavorful dish.",
+        "tags": ["主菜", "素食"],
+        "images": ["http://example.com/images/green_pepper_egg.jpg"]
+    },
+    {
+        "name": "香菇炒肉片",
+        "name_en": "Stir-fried Pork with Shiitake Mushrooms",
+        "description": "香菇与猪肉片同炒，鲜嫩多汁。",
+        "description_en": "Shiitake mushrooms stir-fried with pork slices, offering a juicy and tender dish.",
+        "tags": ["主菜", "肉类", "猪肉"],
+        "images": ["http://example.com/images/shiitake_pork.jpg"]
+    },
+    {
+        "name": "荷兰豆炒虾仁",
+        "name_en": "Stir-fried Shrimp with Snow Peas",
+        "description": "鲜嫩的虾仁搭配清脆的荷兰豆，清新爽口。",
+        "description_en": "Snow peas stir-fried with shrimp, offering a fresh and crunchy dish.",
+        "tags": ["主菜", "海鲜"],
+        "images": ["http://example.com/images/shrimp_snow_peas.jpg"]
+    },
+    {
+        "name": "黄瓜炒肉片",
+        "name_en": "Stir-fried Pork with Cucumber",
+        "description": "清新的黄瓜片与猪肉片炒制，口感清爽。",
+        "description_en": "Cucumber slices stir-fried with pork, offering a refreshing and savory flavor.",
+        "tags": ["主菜", "肉类", "猪肉"],
+        "images": ["http://example.com/images/cucumber_pork.jpg"]
+    },
+    {
+        "name": "菜花炒牛肉",
+        "name_en": "Stir-fried Cauliflower with Beef",
+        "description": "菜花与牛肉同炒，营养丰富，风味独特。",
+        "description_en": "Cauliflower stir-fried with beef, offering a nutritious and flavorful dish.",
+        "tags": ["主菜", "肉类"],
+        "images": ["http://example.com/images/cauliflower_beef.jpg"]
+    },
+    {
+        "name": "西兰花炒虾仁",
+        "name_en": "Stir-fried Shrimp with Broccoli",
+        "description": "西兰花与虾仁搭配炒制，口感清脆鲜美。",
+        "description_en": "Broccoli stir-fried with shrimp, offering a crisp and delicious taste.",
+        "tags": ["主菜", "海鲜"],
+        "images": ["http://example.com/images/broccoli_shrimp.jpg"]
+    },
+    {
+        "name": "尖椒炒土豆丝",
+        "name_en": "Stir-fried Potato Strips with Chili",
+        "description": "土豆丝搭配尖椒清炒，微辣可口。",
+        "description_en": "Potato strips stir-fried with chili peppers, offering a slightly spicy and savory flavor.",
+        "tags": ["主菜", "素食", "辣"],
+        "images": ["http://example.com/images/potato_chili.jpg"]
+    },
+    {
+        "name": "胡萝卜炒鸡蛋",
+        "name_en": "Stir-fried Eggs with Carrots",
+        "description": "胡萝卜片与鸡蛋搭配炒制，清甜美味。",
+        "description_en": "Carrot slices stir-fried with eggs, offering a sweet and tasty dish.",
+        "tags": ["主菜", "素食"],
+        "images": ["http://example.com/images/carrot_egg.jpg"]
+    },
+    {
+        "name": "干炒牛河",
+        "name_en": "Stir-Fried Rice Noodles with Beef",
+        "description": "粤菜经典主食，以牛肉和河粉干炒而成，香气扑鼻，口感滑嫩。",
+        "description_en": "A classic Cantonese dish made with stir-fried rice noodles and beef, known for its fragrant aroma and smooth texture.",
+        "tags": ["主菜", "肉类", "麸质"],
+        "images": ["http://example.com/images/ganchaoniuhe.jpg"]
+    },
+    {
+        "name": "豉汁蒸排骨",
+        "name_en": "Steamed Pork Ribs with Black Bean Sauce",
+        "description": "用黑豆酱调味的蒸排骨，鲜嫩多汁，广式点心中的经典菜品。",
+        "description_en": "Tender and juicy pork ribs steamed with black bean sauce, a classic dish in Cantonese dim sum.",
+        "tags": ["主菜", "肉类", "猪肉"],
+        "images": ["http://example.com/images/chizhipaigu.jpg"]
+    },
+    {
+        "name": "白切鸡",
+        "name_en": "White-Cut Chicken",
+        "description": "粤菜经典凉菜，鸡肉鲜嫩多汁，搭配酱油或姜葱蘸料食用。",
+        "description_en": "A classic Cantonese cold dish featuring tender and juicy chicken, served with soy sauce or ginger scallion dipping sauce.",
+        "tags": ["主菜", "肉类", "清真"],
+        "images": ["http://example.com/images/baqiej.jpg"]
+    },
+    {
+        "name": "叉烧包",
+        "name_en": "BBQ Pork Buns",
+        "description": "经典广式点心，松软的包子内填满甜美多汁的叉烧馅料。",
+        "description_en": "A classic Cantonese dim sum, featuring fluffy buns filled with sweet and savory BBQ pork.",
+        "tags": ["小吃", "肉类", "猪肉", "麸质"],
+        "images": ["http://example.com/images/chashaobao.jpg"]
+    },
+    {
+        "name": "艇仔粥",
+        "name_en": "Boat Congee",
+        "description": "广式特色粥品，以鱼片、虾仁和香葱等配料熬制而成，口感鲜美。",
+        "description_en": "A Cantonese specialty congee made with fish slices, shrimp, and scallions, offering a delightful and savory flavor.",
+        "tags": ["汤", "海鲜"],
+        "images": ["http://example.com/images/tingzaizhou.jpg"]
+    },
+    {
+        "name": "椒盐濑尿虾",
+        "name_en": "Salt and Pepper Mantis Shrimp",
+        "description": "濑尿虾炸制酥脆后洒上椒盐，外酥内嫩，风味独特。",
+        "description_en": "Crispy fried mantis shrimp seasoned with salt and pepper, offering a crunchy exterior and tender interior.",
+        "tags": ["主菜", "海鲜", "油炸"],
+        "images": ["http://example.com/images/jiaoyanlaniaoxia.jpg"]
+    },
+    {
+        "name": "虾饺",
+        "name_en": "Shrimp Dumplings",
+        "description": "广式点心代表之一，薄透的外皮包裹鲜美的虾仁，口感Q弹。",
+        "description_en": "A hallmark of Cantonese dim sum, featuring translucent wrappers encasing juicy shrimp fillings with a bouncy texture.",
+        "tags": ["小吃", "海鲜", "麸质"],
+        "images": ["http://example.com/images/harjiao.jpg"]
+    },
+    {
+        "name": "蜜汁叉烧",
+        "name_en": "Honey-Glazed BBQ Pork",
+        "description": "甜美多汁的叉烧，以蜂蜜和酱料腌制后烤制而成，是粤菜经典代表。",
+        "description_en": "Juicy and sweet BBQ pork marinated with honey and seasonings, a classic representation of Cantonese cuisine.",
+        "tags": ["主菜", "肉类", "猪肉", "发酵"],
+        "images": ["http://example.com/images/mizhichashao.jpg"]
+    },
+    {
+        "name": "云吞面",
+        "name_en": "Wonton Noodles",
+        "description": "粤式传统面食，薄皮鲜虾云吞配上劲道的面条和鲜美的汤底。",
+        "description_en": "A traditional Cantonese noodle dish featuring shrimp wontons with chewy noodles and a flavorful broth.",
+        "tags": ["主菜", "海鲜", "麸质", "含蒜"],
+        "images": ["http://example.com/images/yuntunmian.jpg"]
+    },
+    {
+        "name": "椰汁马蹄糕",
+        "name_en": "Coconut Water Chestnut Cake",
+        "description": "清爽香甜的甜品，以椰汁和马蹄粉制成，晶莹剔透，口感Q弹。",
+        "description_en": "A refreshing and sweet dessert made with coconut milk and water chestnut flour, translucent and bouncy in texture.",
+        "tags": ["甜品", "素食"],
+        "images": ["http://example.com/images/yezhiwatigao.jpg"]
+    },
+    {
+        "name": "肠粉",
+        "name_en": "Rice Noodle Roll",
+        "description": "广式早餐或点心，薄滑的米粉卷内包裹虾仁、叉烧等馅料，淋上酱油提味。",
+        "description_en": "A Cantonese breakfast or dim sum dish with silky rice noodle rolls filled with shrimp, BBQ pork, or other fillings, topped with soy sauce.",
+        "tags": ["小吃", "海鲜", "麸质"],
+        "images": ["http://example.com/images/changfen.jpg"]
+    },
+    {
+        "name": "咸煎饼",
+        "name_en": "Savory Fried Pancakes",
+        "description": "广式小吃，用面团包裹馅料后油炸，外脆内嫩，馅料咸香可口。",
+        "description_en": "A Cantonese snack made by frying dough filled with savory ingredients, crispy on the outside and tender inside.",
+        "tags": ["小吃", "素食", "油炸", "麸质"],
+        "images": ["http://example.com/images/xianjianbing.jpg"]
+    },
+    {
+        "name": "烧卖",
+        "name_en": "Shumai",
+        "description": "广式点心经典，糯米、猪肉或虾仁制成，皮薄馅丰，香气扑鼻。",
+        "description_en": "A classic Cantonese dim sum made with glutinous rice, pork, or shrimp, featuring a thin wrapper and aromatic filling.",
+        "tags": ["小吃", "肉类", "海鲜", "猪肉"],
+        "images": ["http://example.com/images/shaomai.jpg"]
+    },
+    {
+        "name": "荷叶糯米鸡",
+        "name_en": "Lotus Leaf Wrapped Sticky Rice",
+        "description": "糯米包裹鸡肉、香菇等食材，用荷叶包裹后蒸熟，荷叶香气渗入米饭中。",
+        "description_en": "Sticky rice filled with chicken, mushrooms, and other ingredients, wrapped in lotus leaves and steamed for a fragrant aroma.",
+        "tags": ["主菜", "肉类", "含蒜"],
+        "images": ["http://example.com/images/heyenmji.jpg"]
+    },
+    {
+        "name": "豉油鸡",
+        "name_en": "Soy Sauce Chicken",
+        "description": "整鸡以酱油为主料卤制，皮滑肉嫩，酱香浓郁，经典粤菜。",
+        "description_en": "A whole chicken braised in soy sauce, offering tender meat and a rich, savory flavor, a classic Cantonese dish.",
+        "tags": ["主菜", "肉类", "清真"],
+        "images": ["http://example.com/images/chiyouji.jpg"]
+    },
+    {
+        "name": "金银蛋芥菜汤",
+        "name_en": "Preserved Egg and Salted Egg Mustard Greens Soup",
+        "description": "用皮蛋、咸蛋和芥菜熬制而成，口感清香独特，营养丰富。",
+        "description_en": "A nutritious soup made with preserved eggs, salted eggs, and mustard greens, offering a refreshing and unique taste.",
+        "tags": ["汤", "素食"],
+        "images": ["http://example.com/images/jinyindanjietaitang.jpg"]
+    },
+    {
+        "name": "煲仔饭",
+        "name_en": "Claypot Rice",
+        "description": "以砂锅焖煮的米饭，配以腊肠、排骨等配料，米饭吸收锅巴的香气。",
+        "description_en": "Rice cooked in a clay pot with ingredients like sausage and ribs, absorbing the aromatic flavors of the crispy rice crust.",
+        "tags": ["主菜", "肉类", "猪肉"],
+        "images": ["http://example.com/images/baozaifan.jpg"]
+    },
+    {
+        "name": "萝卜糕",
+        "name_en": "Turnip Cake",
+        "description": "广式点心，以白萝卜丝、糯米粉等蒸制后煎香，外焦里嫩。",
+        "description_en": "A Cantonese dim sum made with shredded radish and rice flour, steamed and pan-fried for a crispy exterior and tender interior.",
+        "tags": ["小吃", "素食", "油炸"],
+        "images": ["http://example.com/images/luobogao.jpg"]
+    },
+    {
+        "name": "避风塘炒蟹",
+        "name_en": "Typhoon Shelter Fried Crab",
+        "description": "以香脆的蒜蓉和辣椒炒制的蟹，香气扑鼻，风味浓郁。",
+        "description_en": "Crab stir-fried with crispy garlic and chili, offering a fragrant and rich flavor, inspired by Hong Kong's typhoon shelters.",
+        "tags": ["主菜", "海鲜", "含蒜", "辣"],
+        "images": ["http://example.com/images/beifengtangchaoxie.jpg"]
+    },
+    {
+        "name": "煎饼果子",
+        "name_en": "Jianbing Guozi",
+        "description": "用面糊摊成薄饼，加入鸡蛋、葱花和炸果子，卷成美味小吃。",
+        "description_en": "A thin pancake made from batter, filled with egg, scallions, and fried dough sticks, rolled into a delicious snack.",
+        "tags": ["小吃", "素食", "含大豆", "麸质"],
+        "images": ["http://example.com/images/jianbingguozi.jpg"]
+    },
+    {
+        "name": "驴打滚",
+        "name_en": "Rolling Donkey",
+        "description": "以糯米面制成的甜点，外裹豆沙，撒上黄豆粉，香甜软糯。",
+        "description_en": "A sweet snack made of glutinous rice flour, filled with red bean paste, and coated with soybean powder, sweet and soft.",
+        "tags": ["小吃", "甜品", "素食"],
+        "images": ["http://example.com/images/lvdagun.jpg"]
+    },
+    {
+        "name": "糖葫芦",
+        "name_en": "Candied Hawthorn",
+        "description": "传统小吃，将山楂串成串后裹上糖衣，酸甜可口。",
+        "description_en": "A traditional snack made by coating skewered hawthorn berries in a sugar glaze, offering a sweet and tangy taste.",
+        "tags": ["小吃", "甜品", "素食"],
+        "images": ["http://example.com/images/tanghulu.jpg"]
+    },
+    {
+        "name": "油茶",
+        "name_en": "Oil Tea",
+        "description": "用油炒面粉后加入水和调料煮成的传统早餐饮品，浓香四溢。",
+        "description_en": "A traditional breakfast drink made by frying flour in oil, then cooking it with water and seasonings, rich and aromatic.",
+        "tags": ["小吃", "饮品", "素食"],
+        "images": ["http://example.com/images/youchai.jpg"]
+    },
+    {
+        "name": "炸酱夹馍",
+        "name_en": "Zhajiang Stuffed Bun",
+        "description": "酥脆的馍夹入炸酱和配菜，是一道风味十足的街头小吃。",
+        "description_en": "A crispy bun stuffed with soybean paste and vegetables, a flavorful street snack.",
+        "tags": ["小吃", "含大豆", "麸质", "肉类"],
+        "images": ["http://example.com/images/zhajiangjiamo.jpg"]
+    },
+    {
+        "name": "山楂糕",
+        "name_en": "Hawthorn Jelly",
+        "description": "以山楂果为主料制作的果冻状糕点，酸甜适口。",
+        "description_en": "A jelly-like dessert made from hawthorn fruits, offering a sweet and tangy taste.",
+        "tags": ["小吃", "甜品", "素食"],
+        "images": ["http://example.com/images/shanzhagao.jpg"]
+    },
+    {
+        "name": "炸蝎子",
+        "name_en": "Fried Scorpions",
+        "description": "一种传统北京小吃，将新鲜的蝎子裹面糊油炸而成，香脆独特。",
+        "description_en": "A traditional Beijing snack made by frying fresh scorpions in batter, crispy and unique in flavor.",
+        "tags": ["小吃", "油炸", "肉类"],
+        "images": ["http://example.com/images/zhaxiezi.jpg"]
+    },
+    {
+        "name": "冰糖葫芦",
+        "name_en": "Rock Sugar Hawthorn",
+        "description": "在糖葫芦的基础上加入冰糖制作，糖衣更厚，口感更加香甜。",
+        "description_en": "A variation of candied hawthorn with a thicker rock sugar coating, offering a sweeter taste.",
+        "tags": ["小吃", "甜品", "素食"],
+        "images": ["http://example.com/images/bingtanghulu.jpg"]
+    },
+    {
+        "name": "鸡丝凉面",
+        "name_en": "Cold Noodles with Shredded Chicken",
+        "description": "凉拌面条配以鸡丝、黄瓜丝和花生酱，清爽又美味。",
+        "description_en": "Cold noodles served with shredded chicken, cucumber strips, and peanut sauce, refreshing and tasty.",
+        "tags": ["小吃", "肉类", "含大豆", "麸质"],
+        "images": ["http://example.com/images/jisiliangmian.jpg"]
+    },
+    {
+        "name": "京式驴肉火烧",
+        "name_en": "Beijing Donkey Meat Sandwich",
+        "description": "酥脆的火烧夹入酱香驴肉，是一道独具地方特色的美味。",
+        "description_en": "A crispy bun stuffed with savory donkey meat, a unique and delicious local snack.",
+        "tags": ["小吃", "肉类"],
+        "images": ["http://example.com/images/jingshilvrouhuoshao.jpg"]
+    }
+
+    
+]
+
+    
+
+
+
+

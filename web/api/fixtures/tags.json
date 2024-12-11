@@ -1,0 +1,32 @@
+[
+    {"name": "前菜", "name_en": "Appetizer"},
+    {"name": "主菜", "name_en": "Main Course"},
+    {"name": "汤", "name_en": "Soup"},
+    {"name": "甜品", "name_en": "Dessert"},
+    {"name": "小吃", "name_en": "Snack"},
+
+    {"name": "素食", "name_en": "Vegetarian"},
+    {"name": "肉类", "name_en": "Meat"},
+    {"name": "海鲜", "name_en": "Seafood"},
+    {"name": "清真", "name_en": "Halal"},
+
+    {"name": "猪肉", "name_en": "Pork"},
+    {"name": "大豆", "name_en": "Soy"},
+    {"name": "麸质", "name_en": "Gluten"},  
+
+    {"name": "辣", "name_en": "Spicy"},
+    {"name": "麻", "name_en": "Numbing"},
+    {"name": "酸", "name_en": "Sour"},
+
+    {"name": "含酒精", "name_en": "Alcoholic"},
+    {"name": "含花椒", "name_en": "Sichuan Peppercorn"},
+    {"name": "含蒜", "name_en": "Garlic"},
+    {"name": "含大豆","name_en": "Soy"},
+    {"name": "饮品", "name_en": "Drinks"},
+
+    {"name": "发酵", "name_en": "Fermented"},
+    {"name": "油炸", "name_en": "Fried"},
+    {"name": "火锅", "name_en": "Hot Pot"}
+
+ 
+]
