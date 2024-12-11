@@ -2,18 +2,22 @@
 
 from rest_framework import serializers
 import uuid
+
 from django.contrib.auth import get_user_model
 from .models import Dish, Image, Tag, BrowsingHistory, LikeHistory, FavoriteHistory, CommentHistory
 
 
 User = get_user_model()
 
+
 class EchoSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
+
     password = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
+
 
 class LoginResponseSerializer(serializers.Serializer):
     token = serializers.CharField()
@@ -128,3 +132,4 @@ class LoginSerializer(serializers.Serializer):
 class VoiceTranslationSerializer(serializers.Serializer):
     voice_file = serializers.FileField(required=True, allow_empty_file=False, help_text="上传语音文件")
     isChineseMode = serializers.BooleanField(required=True, help_text="是否为中文模式")
+

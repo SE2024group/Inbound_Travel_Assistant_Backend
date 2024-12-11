@@ -1,4 +1,5 @@
 # api/models.py
+
 from django.conf import settings
 from django.db import models
 
@@ -57,6 +58,7 @@ class CommentHistory(models.Model):
 
     def __str__(self):
         return f"{self.user.username} commented on {self.dish.name} at {self.timestamp}"
+
 
 class Tag(models.Model):
     name = models.CharField(max_length=50)

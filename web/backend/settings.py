@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+
 ]
 
 MIDDLEWARE = [
@@ -101,7 +102,9 @@ DATABASES = {
     }
 }
 
+
 AUTH_USER_MODEL = 'users.CustomUser'  # 指定自定义用户模型
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -155,3 +158,4 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
 }
+

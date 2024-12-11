@@ -5,9 +5,11 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import EchoSerializer, LoginSerializer, LoginResponseSerializer, UserInfoSerializer, OCRSerializer
 from django.conf import settings
+
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from django.contrib.auth import get_user_model
+
 from PIL import Image
 import uuid
 import base64
@@ -15,7 +17,6 @@ import requests
 import io
 import os
 import random
-
 User = get_user_model()
 
 
@@ -26,7 +27,7 @@ class EchoView(APIView):
             username = serializer.validated_data['username']
             return Response({'username': username}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-# web/api/views.py
+
 
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -144,6 +145,7 @@ class OCRView(APIView):
     authentication_classes = [TokenAuthentication, SessionAuthentication]
     permission_classes = [AllowAny]
 
+
     def post(self, request):
         serializer = OCRSerializer(data=request.data)
         if serializer.is_valid():
@@ -211,7 +213,9 @@ class OCRView(APIView):
 
                         # 当前字符是中文，尝试匹配长度在2到6之间的子串
                         matched = False
+
                         for sub_len in range(6, 1, -1):  # 优先尝试较长的子串
+
                             if i + sub_len <= len(line_text):
                                 sub_str = line_text[i:i+sub_len]
 
@@ -241,6 +245,7 @@ class OCRView(APIView):
                                     }
 
                                     # 获取菜品图片
+
                                     image_url = ''
                                     if dish.images.exists():
                                         image_url = dish.images.first().image_url
@@ -253,9 +258,11 @@ class OCRView(APIView):
                                         'bounding_box': bounding_box
                                     })
 
+
                                     # 如果用户已认证，记录浏览历史
                                     if request.user.is_authenticated:
                                         BrowsingHistory.objects.create(user=request.user, dish=dish)
+
 
                                     # 匹配成功后，从下一个子串结束的位置继续
                                     i += sub_len
@@ -325,3 +332,4 @@ class VoiceTranslationView(APIView):
                 "message": "上传失败",
                 "errors": serializer.errors
             }, status=status.HTTP_400_BAD_REQUEST)
+
