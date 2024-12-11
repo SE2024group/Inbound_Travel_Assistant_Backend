@@ -57,12 +57,11 @@ class DishDetailSerializer(serializers.ModelSerializer):
             'images', 
             'tags'
         ]
-
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'nickname', 'avatar', 'personality_description']
-        read_only_fields = ['id']
+        fields = ['id', 'username', 'email', 'nickname', 'avatar', 'personality_description', 'signup_date', 'religious_belief', 'dietary_restrictions']
+        read_only_fields = ['id', 'signup_date']
 
 class BrowsingHistorySerializer(serializers.ModelSerializer):
     dish = serializers.StringRelatedField()
@@ -152,3 +151,6 @@ class VoiceTranslationSerializer(serializers.Serializer):
             raise serializers.ValidationError("文件大小不足（1KB）。")
         return value
 
+class TextTranslationSerializer(serializers.Serializer):
+    text = serializers.CharField(required=True, help_text="需要翻译的文本")
+    isChineseMode = serializers.BooleanField(required=True, help_text="是否为中文模式，True表示原文为中文")

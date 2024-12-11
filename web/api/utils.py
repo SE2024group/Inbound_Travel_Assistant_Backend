@@ -11,8 +11,12 @@ def translate_text(text, from_lang, to_lang):
     :param from_lang: 原文语言类型（如 "ZH"、"EN"）
     :param to_lang: 目标语言类型（如 "EN"、"ZH"）
     :return: 翻译后的文本
-    :raises: Exception 如果翻译失败
+    :raises: Exception 如果翻译失败或文本为空
     """
+    # 如果文本为空或者仅包含空白字符，则直接报错
+    if not text or not text.strip():
+        raise Exception("输入文本为空，请提供有效的文本进行翻译。")
+
     url = settings.TRANSLATE_API_URL
     payload = {
         "ColaKey": settings.COLA_KEY,
@@ -31,10 +35,10 @@ def translate_text(text, from_lang, to_lang):
     
     data = response.json()
     
-    # 根据实际 API 响应格式调整
-    # 假设成功响应包含 'translated_text' 字段
+    # 假设API成功时code=0，data中包含 { "dst": "translated text" }
     if data.get("code") != 0:
-        raise Exception(f"翻译 API 错误：{data.get('msg')}")
+        msg = data.get("msg", "未知错误")
+        raise Exception(f"翻译 API 错误：{msg}")
     
     translated_text = data.get("data", {}).get("dst")
     
