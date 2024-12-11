@@ -36,6 +36,7 @@ from .serializers import (
     FavoriteHistorySerializer, CommentHistorySerializer
 )
 from .models import BrowsingHistory, LikeHistory, FavoriteHistory, CommentHistory
+from datetime import date
 
 User = get_user_model()
 
@@ -50,6 +51,10 @@ class RegisterView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         # 创建 Token
+        # 设置用户的注册日期
+        user.signup_date = date.today()
+        user.save()
+
         token, created = Token.objects.get_or_create(user=user)
         return Response({
             "user": UserSerializer(user, context=self.get_serializer_context()).data,
@@ -59,7 +64,8 @@ class RegisterView(generics.CreateAPIView):
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate
 
-# 登录视图
+# web/api/views.py 中 LoginView
+
 class LoginView(APIView):
     permission_classes = [AllowAny]
 
@@ -71,18 +77,20 @@ class LoginView(APIView):
         username = serializer.validated_data['username']
         password = serializer.validated_data['password']
 
-        # 使用 django.contrib.auth.authenticate 对用户名和密码进行数据库验证
+        from django.contrib.auth import authenticate
         user = authenticate(username=username, password=password)
         if not user:
-            return Response({"error": "Invalid username or password."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Invalid username or password."}, status=status.HTTP_401_UNAUTHORIZED)
 
         # 登录成功，获取或创建Token
+        from rest_framework.authtoken.models import Token
         token, created = Token.objects.get_or_create(user=user)
         user_data = UserSerializer(user).data
         return Response({
-            "user": user_data,
-            "token": token.key
+            "token": token.key,
+            "user": user_data
         }, status=status.HTTP_200_OK)
+
 
 # 登出视图
 class LogoutView(APIView):
@@ -97,6 +105,41 @@ class LogoutView(APIView):
             return Response({'error': 'Token not found.'}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({"message": "Logged out successfully."}, status=status.HTTP_200_OK)
+
+
+# web/api/views.py
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import generics
+# web/api/views.py
+
+class UpdateUserPreferencesView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request):
+        user = request.user
+        religious_belief = request.data.get('religious_belief', None)
+        dietary_restrictions = request.data.get('dietary_restrictions', None)
+        
+        # 验证 dietary_restrictions 是否为列表（可选）
+        if dietary_restrictions is not None and not isinstance(dietary_restrictions, list):
+            return Response({"error": "Invalid dietary_restrictions format, must be an array of strings."}, status=status.HTTP_400_BAD_REQUEST)
+
+        updated = False
+        if religious_belief is not None:
+            user.religious_belief = religious_belief
+            updated = True
+        if dietary_restrictions is not None:
+            user.dietary_restrictions = dietary_restrictions
+            updated = True
+
+        if updated:
+            user.save()
+
+        return Response({
+            "message": "Preferences updated successfully.",
+            "user": UserSerializer(user).data
+        }, status=status.HTTP_200_OK)
+
 
 # 用户详细信息视图
 class UserDetailView(generics.RetrieveUpdateAPIView):
@@ -374,6 +417,68 @@ class VoiceTranslationView(APIView):
                 os.remove(temp_file_path)
         else:
             logger.warning(f"Voice translation upload failed: {serializer.errors}")
+            return Response({
+                "code": 400,
+                "message": "上传失败",
+                "errors": serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+from .serializers import TextTranslationSerializer
+
+class TextTranslationView(APIView):
+    """
+    文本翻译公开 API 端点。
+    接受文本和 isChineseMode 参数，返回中英文文字结果。
+    """
+    permission_classes = [AllowAny]
+
+    def post(self, request, format=None):
+        serializer = TextTranslationSerializer(data=request.data)
+        if serializer.is_valid():
+            text = serializer.validated_data['text']
+            is_chinese_mode = serializer.validated_data['isChineseMode']
+
+            logger.info(f"Received text translation request. isChineseMode: {is_chinese_mode}")
+
+            try:
+
+                # 如果是中文模式: 原文中文 -> 译文英文
+                # 如果是英文模式: 原文英文 -> 译文中文
+                if is_chinese_mode:
+                    # 中文 -> 英文
+                    translated_text = translate_text(text, from_lang="ZH", to_lang="EN")
+                    cn_text = text
+                    en_text = translated_text
+                else:
+                    # 英文 -> 中文
+                    translated_text = translate_text(text, from_lang="EN", to_lang="ZH")
+                    cn_text = translated_text
+                    en_text = text
+
+                logger.info(f"Original text: {text}")
+                logger.info(f"Translated text: {translated_text}")
+
+                response_data = {
+                    "code": 200,
+                    "message": "上传成功",
+                    "data": {
+                        "cn_text": cn_text,
+                        "en_text": en_text,
+                        "isChineseMode": is_chinese_mode
+                    }
+                }
+
+                return Response(response_data, status=status.HTTP_200_OK)
+
+            except Exception as e:
+                logger.error(f"Error during text translation: {str(e)}")
+                return Response({
+                    "code": 500,
+                    "message": "服务器内部错误",
+                    "errors": str(e)
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            logger.warning(f"Text translation request failed: {serializer.errors}")
             return Response({
                 "code": 400,
                 "message": "上传失败",
