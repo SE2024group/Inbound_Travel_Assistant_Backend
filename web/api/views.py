@@ -26,7 +26,6 @@ class EchoView(APIView):
             username = serializer.validated_data['username']
             return Response({'username': username}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-# web/api/views.py
 
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -317,7 +316,7 @@ class VoiceTranslationView(APIView):
         if serializer.is_valid():
             voice_file = serializer.validated_data['voice_file']
             is_chinese_mode = serializer.validated_data['isChineseMode']
-            
+
             print("is_chinese_mode:", is_chinese_mode)
             
             # 使用临时文件保存上传的语音文件

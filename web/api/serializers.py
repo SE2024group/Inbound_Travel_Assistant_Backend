@@ -2,11 +2,13 @@
 
 from rest_framework import serializers
 import uuid
+
 from django.contrib.auth import get_user_model
 from .models import Dish, Image, Tag, BrowsingHistory, LikeHistory, FavoriteHistory, CommentHistory
 
 
 User = get_user_model()
+
 
 class EchoSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
@@ -149,3 +151,4 @@ class VoiceTranslationSerializer(serializers.Serializer):
         if value.size < min_size:
             raise serializers.ValidationError("文件大小不足（1KB）。")
         return value
+
