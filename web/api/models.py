@@ -1,6 +1,62 @@
 # api/models.py
-
+from django.conf import settings
 from django.db import models
+
+
+class BrowsingHistory(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='browsing_history')
+    dish = models.ForeignKey('Dish', on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-timestamp']
+        verbose_name = 'Browsing History'
+        verbose_name_plural = 'Browsing Histories'
+
+    def __str__(self):
+        return f"{self.user.username} viewed {self.dish.name} at {self.timestamp}"
+
+
+class LikeHistory(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='like_history')
+    dish = models.ForeignKey('Dish', on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-timestamp']
+        verbose_name = 'Like History'
+        verbose_name_plural = 'Like Histories'
+
+    def __str__(self):
+        return f"{self.user.username} liked {self.dish.name} at {self.timestamp}"
+
+
+class FavoriteHistory(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='favorite_history')
+    dish = models.ForeignKey('Dish', on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-timestamp']
+        verbose_name = 'Favorite History'
+        verbose_name_plural = 'Favorite Histories'
+
+    def __str__(self):
+        return f"{self.user.username} favorited {self.dish.name} at {self.timestamp}"
+
+class CommentHistory(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='comment_history')
+    dish = models.ForeignKey('Dish', on_delete=models.CASCADE)
+    comment = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-timestamp']
+        verbose_name = 'Comment History'
+        verbose_name_plural = 'Comment Histories'
+
+    def __str__(self):
+        return f"{self.user.username} commented on {self.dish.name} at {self.timestamp}"
 
 class Tag(models.Model):
     name = models.CharField(max_length=50)
