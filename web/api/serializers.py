@@ -62,6 +62,19 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username', 'email', 'nickname', 'avatar', 'personality_description', 'signup_date', 'religious_belief', 'dietary_restrictions']
         read_only_fields = ['id', 'signup_date']
+        
+    def update(self, instance, validated_data):
+        # 更新 dietary_restrictions
+        dietary_restrictions = validated_data.pop('dietary_restrictions', None)
+        if dietary_restrictions is not None:
+            instance.dietary_restrictions = dietary_restrictions
+
+        # 更新其他字段
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        instance.save()
+        return instance
 
 class BrowsingHistorySerializer(serializers.ModelSerializer):
     dish = serializers.StringRelatedField()

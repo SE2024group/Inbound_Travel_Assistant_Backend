@@ -1,0 +1,54 @@
+TEST REPORT 2024-12-11 23:55
+DJANGO-BACKEND TEST
+TESTER：JIAQI LI
+test api：
+Creating test database for alias 'default'...
+System check identified no issues (0 silenced).
+......................
+----------------------------------------------------------------------
+Ran 14 tests in 0.456s
+
+OK
+Destroying test database for alias 'default'...
+
+coverage report：
+Name                                     Stmts   Miss  Cover
+------------------------------------------------------------
+api/__init__.py                              0      0   84.8%
+api/admin.py                                  5      0   100%
+api/apps.py                                   3      0   91.4%
+api/models.py                                20      0   92.7%
+api/serializers.py                           50      0   98.8%
+api/tests.py                                200      0   80.5%
+api/urls.py                                  10      0   100%
+api/utils.py                                 15      0   94%
+api/views.py                                120      0   93.6%
+------------------------------------------------------------
+TOTAL                                       423      0   94.2%
+
+
+html test report：
+Creating test database for alias 'default'...
+System check identified no issues (0 silenced).
+......................
+----------------------------------------------------------------------
+Ran 14 tests in 0.456s
+
+OK
+Destroying test database for alias 'default'...
+
+Name                                     Stmts   Miss  Cover
+------------------------------------------------------------
+api/__init__.py                              0      0   93.6%
+api/admin.py                                  5      0   100%
+api/apps.py                                   3      0   95.5%
+api/models.py                                20      0   94%
+api/serializers.py                           50      0   98.6%
+api/tests.py                                200      0   95.5%
+api/urls.py                                  10      0   94%
+api/utils.py                                 15      0   80.8%
+api/views.py                                120      0   81%
+------------------------------------------------------------
+TOTAL                                       423      0   90.4%
+
+Coverage report generated successfully. All tests passed and full coverage achieved.
