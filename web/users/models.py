@@ -13,7 +13,7 @@ def user_avatar_upload_to(instance, filename):
     # 使用uuid生成唯一文件名
     new_filename = f"{uuid.uuid4().hex}{ext}"
     return os.path.join('avatars', str(instance.id), new_filename)
-
+  
 class CustomUser(AbstractUser):
     nickname = models.CharField(max_length=150, blank=True)
     avatar = models.ImageField(upload_to=user_avatar_upload_to, blank=True, null=True)
