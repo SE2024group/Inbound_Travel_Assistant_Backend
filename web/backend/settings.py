@@ -148,6 +148,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # 确保 MEDIA_ROOT 目录存在
 os.makedirs(MEDIA_ROOT, exist_ok=True)
 
+print('---',MEDIA_ROOT,'-----------------')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 

@@ -38,7 +38,6 @@ from .serializers import (
 from .models import BrowsingHistory, LikeHistory, FavoriteHistory, CommentHistory
 from datetime import date
 
-User = get_user_model()
 
 # 注册视图
 class RegisterView(generics.CreateAPIView):
@@ -149,6 +148,21 @@ class UserDetailView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         return self.request.user
+        
+    def update(self, request, *args, **kwargs):
+        print("Update user info")
+        partial = kwargs.pop('partial', True)  # 允许部分更新
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        # 日志记录
+        if 'avatar' in request.FILES:
+            print(f"User {instance.username} uploaded avatar: {instance.avatar.url}")
+            logger.info(f"User {instance.username} uploaded avatar: {instance.avatar.url}")
+
+        return Response(serializer.data)
 
 # 浏览历史视图
 class BrowsingHistoryListView(generics.ListAPIView):
@@ -344,7 +358,7 @@ from .utils import translate_text  # 导入翻译函数
 converter = OpenCC('t2s')
 
 # 加载 Whisper 模型（CPU 版本）
-model = whisper.load_model("base")  # "base" 模型适用于 CPU，较小且速度较快
+model = None # whisper.load_model("base")  # "base" 模型适用于 CPU，较小且速度较快
 logger = logging.getLogger(__name__)
 
 class VoiceTranslationView(APIView):

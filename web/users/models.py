@@ -12,6 +12,7 @@ def user_avatar_upload_to(instance, filename):
     ext = os.path.splitext(filename)[1]
     # 使用uuid生成唯一文件名
     new_filename = f"{uuid.uuid4().hex}{ext}"
+    print(os.path.join('avatars', str(instance.id), new_filename),'-----------------')
     return os.path.join('avatars', str(instance.id), new_filename)
   
 class CustomUser(AbstractUser):
