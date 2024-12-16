@@ -140,7 +140,7 @@
         "name_en": "Beijing Noodles with Soybean Paste",
         "description": "以面条拌以黄豆酱和炒制的肉末，搭配黄瓜丝等配料。",
         "description_en": "Noodles served with soybean paste and stir-fried minced pork, accompanied by cucumber slices and other toppings.",
-        "tags": ["主菜",   "含大豆", "含蒜"],
+        "tags": ["主菜",   "含坚果", "含蒜"],
         "images": ["http://example.com/images/zhajiangmian.jpg"]
     },
     {
@@ -180,7 +180,7 @@
         "name_en": "Beijing Shredded Pork in Sweet Bean Sauce",
         "description": "猪肉丝炒制后淋上京酱，搭配豆皮或荷叶饼食用，味道鲜美。",
         "description_en": "Shredded pork stir-fried and coated with sweet bean sauce, typically served with tofu skin or pancakes.",
-        "tags": ["主菜", "肉类", "含大豆", "猪肉"],
+        "tags": ["主菜", "肉类", "含坚果", "猪肉"],
         "images": ["http://example.com/images/jingjiangrousi.jpg"]
     },
     {
@@ -212,7 +212,7 @@
         "name_en": "Fermented Tofu",
         "description": "一种大豆制品，经过发酵后味道浓郁，常作为佐餐小菜。",
         "description_en": "A soybean product fermented for a rich flavor, commonly served as a side dish.",
-        "tags": ["前菜", "素食", "发酵", "含大豆"],
+        "tags": ["前菜", "素食", "发酵", "含坚果"],
         "images": ["http://example.com/images/doufurur.jpg"]
     },
     {
@@ -220,7 +220,7 @@
         "name_en": "Vegetarian Chicken",
         "description": "以豆腐皮卷制成的仿荤菜，口感嫩滑，是素食者的佳品。",
         "description_en": "A mock meat dish made from tofu skin, offering a tender texture, perfect for vegetarians.",
-        "tags": ["主菜", "素食", "含大豆"],
+        "tags": ["主菜", "素食", "含坚果"],
         "images": ["http://example.com/images/suji.jpg"]
     },
     {
@@ -228,7 +228,7 @@
         "name_en": "Tofu Pudding",
         "description": "用大豆制成的嫩豆腐，配以咸味或甜味调料。",
         "description_en": "A tender tofu dish made from soybeans, served with savory or sweet toppings.",
-        "tags": ["汤", "素食", "含大豆"],
+        "tags": ["汤", "素食", "含坚果"],
         "images": ["http://example.com/images/doufuna.jpg"]
     },
     {
@@ -236,7 +236,7 @@
         "name_en": "Fried Tofu",
         "description": "外酥里嫩的油炸豆腐，可蘸酱食用或入菜。",
         "description_en": "Crispy on the outside and tender inside, fried tofu can be dipped in sauce or added to dishes.",
-        "tags": ["主菜", "素食", "油炸", "含大豆"],
+        "tags": ["主菜", "素食", "油炸", "含坚果"],
         "images": ["http://example.com/images/youzhadoufu.jpg"]
     },
     {
@@ -244,7 +244,7 @@
         "name_en": "Soy Sauce Braised Tofu",
         "description": "豆腐经过酱油和香料炖煮，味道鲜美入味。",
         "description_en": "Tofu braised with soy sauce and spices, offering a flavorful taste.",
-        "tags": ["主菜", "素食", "发酵", "含大豆"],
+        "tags": ["主菜", "素食", "发酵", "含坚果"],
         "images": ["http://example.com/images/jiangxiangdoufu.jpg"]
     },
     {
@@ -252,7 +252,7 @@
         "name_en": "Spicy Tofu",
         "description": "豆腐与辣椒和花椒一起炒制，口感麻辣鲜香。",
         "description_en": "Tofu stir-fried with chili peppers and Sichuan peppercorns, delivering a spicy and numbing flavor.",
-        "tags": ["主菜", "素食", "辣", "麻", "含大豆"],
+        "tags": ["主菜", "素食", "辣", "麻", "含坚果"],
         "images": ["http://example.com/images/maladoufua.jpg"]
     },
     {
@@ -260,7 +260,7 @@
         "name_en": "Tofu Soup",
         "description": "以嫩豆腐为主料，搭配蔬菜煮制而成的清淡汤品。",
         "description_en": "A light soup made with tender tofu and vegetables.",
-        "tags": ["汤", "素食", "含大豆"],
+        "tags": ["汤", "素食", "含坚果"],
         "images": ["http://example.com/images/doufugeng.jpg"]
     },
     {
@@ -268,7 +268,7 @@
         "name_en": "Steamed Pork Ribs with Fermented Black Beans",
         "description": "排骨搭配豆豉蒸制，豆豉的香味渗入肉中，味道浓郁。",
         "description_en": "Pork ribs steamed with fermented black beans, infusing the meat with rich flavors.",
-        "tags": ["主菜", "肉类", "发酵", "含大豆"],
+        "tags": ["主菜", "肉类", "发酵", "含坚果"],
         "images": ["http://example.com/images/douchipaigu.jpg"]
     },
     {
@@ -276,7 +276,7 @@
         "name_en": "Fish with Fermented Broad Bean Paste",
         "description": "以豆瓣酱为主要调料的鱼类菜肴，味道浓郁鲜香。",
         "description_en": "A fish dish flavored with fermented broad bean paste, offering a rich and savory taste.",
-        "tags": ["主菜", "海鲜", "发酵", "含大豆"],
+        "tags": ["主菜", "海鲜", "发酵", "含坚果"],
         "images": ["http://example.com/images/doubanfish.jpg"]
     },
     {
@@ -284,7 +284,7 @@
         "name_en": "Tofu Hot Pot",
         "description": "以豆腐为主料的火锅，搭配多种蔬菜和酱料，清淡可口。",
         "description_en": "A hot pot dish with tofu as the main ingredient, paired with various vegetables and sauces.",
-        "tags": ["主菜", "火锅", "素食", "含大豆"],
+        "tags": ["主菜", "火锅", "素食", "含坚果"],
         "images": ["http://example.com/images/doufuhotpot.jpg"]
     },
     {
@@ -364,7 +364,7 @@
         "name_en": "Steamed Pork Ribs with Black Bean Sauce Rice Bowl",
         "description": "豆豉蒸排骨与米饭的绝佳搭配，鲜香可口。",
         "description_en": "Tender pork ribs steamed with black bean sauce, served over rice for a delightful meal.",
-        "tags": ["主菜", "肉类", "含大豆"],
+        "tags": ["主菜", "肉类", "含坚果"],
         "images": ["http://example.com/images/blackbeanribsrice.jpg"]
     },
     {
@@ -796,7 +796,7 @@
         "name_en": "Jianbing Guozi",
         "description": "用面糊摊成薄饼，加入鸡蛋、葱花和炸果子，卷成美味小吃。",
         "description_en": "A thin pancake made from batter, filled with egg, scallions, and fried dough sticks, rolled into a delicious snack.",
-        "tags": ["小吃", "素食", "含大豆", "麸质"],
+        "tags": ["小吃", "素食", "含坚果", "麸质"],
         "images": ["http://example.com/images/jianbingguozi.jpg"]
     },
     {
@@ -828,7 +828,7 @@
         "name_en": "Zhajiang Stuffed Bun",
         "description": "酥脆的馍夹入炸酱和配菜，是一道风味十足的街头小吃。",
         "description_en": "A crispy bun stuffed with soybean paste and vegetables, a flavorful street snack.",
-        "tags": ["小吃", "含大豆", "麸质", "肉类"],
+        "tags": ["小吃", "含坚果", "麸质", "肉类"],
         "images": ["http://example.com/images/zhajiangjiamo.jpg"]
     },
     {
@@ -860,7 +860,7 @@
         "name_en": "Cold Noodles with Shredded Chicken",
         "description": "凉拌面条配以鸡丝、黄瓜丝和花生酱，清爽又美味。",
         "description_en": "Cold noodles served with shredded chicken, cucumber strips, and peanut sauce, refreshing and tasty.",
-        "tags": ["小吃", "肉类", "含大豆", "麸质"],
+        "tags": ["小吃", "肉类", "含坚果", "麸质"],
         "images": ["http://example.com/images/jisiliangmian.jpg"]
     },
     {

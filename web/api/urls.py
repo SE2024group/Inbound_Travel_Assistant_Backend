@@ -4,7 +4,8 @@ from .views import (
     BrowsingHistoryListView, LikeHistoryListView,
     FavoriteHistoryListView, CommentHistoryListView,
     OCRView, DishDetailView, LogoutView, VoiceTranslationView,
-    UpdateUserPreferencesView, TextTranslationView
+    UpdateUserPreferencesView, TextTranslationView, DishSearchView,
+    TagListView, AdvancedSearchView
 )
 
 urlpatterns = [
@@ -13,7 +14,7 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('user/', UserDetailView.as_view(), name='user-detail'),
-    path('user/preferences', UpdateUserPreferencesView.as_view(), name='user-preferences'),
+    path('user/preferences/', UpdateUserPreferencesView.as_view(), name='user-preferences'),
     path('browsing-history/', BrowsingHistoryListView.as_view(), name='browsing-history'),
     path('like-history/', LikeHistoryListView.as_view(), name='like-history'),
     path('favorite-history/', FavoriteHistoryListView.as_view(), name='favorite-history'),
@@ -22,5 +23,8 @@ urlpatterns = [
     path('dish/<int:pk>/', DishDetailView.as_view(), name='dish-detail'),
     path('voice-translation/', VoiceTranslationView.as_view(), name='voice-translation'),
     path('text-translation/', TextTranslationView.as_view(), name='text-translation'),  # 新增文字翻译端点
+    path('dish/search/', DishSearchView.as_view(), name='dish-search'),  # 新的搜索接口
+    path('dish/advanced_search/', AdvancedSearchView.as_view(), name='advanced-dish-search'),  # 添加进阶搜索路由
+    path('tags/', TagListView.as_view(), name='tag-list'),  # 添加标签列表路由
 
 ]

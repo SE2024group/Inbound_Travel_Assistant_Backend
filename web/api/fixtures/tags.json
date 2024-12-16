@@ -21,7 +21,7 @@
     {"name": "含酒精", "name_en": "Alcoholic"},
     {"name": "含花椒", "name_en": "Sichuan Peppercorn"},
     {"name": "含蒜", "name_en": "Garlic"},
-    {"name": "含大豆","name_en": "Soy"},
+    {"name": "含坚果", "name_en":"Nut"},
     {"name": "饮品", "name_en": "Drinks"},
 
     {"name": "发酵", "name_en": "Fermented"},

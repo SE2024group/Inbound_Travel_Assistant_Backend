@@ -106,38 +106,31 @@ class LogoutView(APIView):
         return Response({"message": "Logged out successfully."}, status=status.HTTP_200_OK)
 
 
-# web/api/views.py
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics
-# web/api/views.py
+
 
 class UpdateUserPreferencesView(APIView):
+    """
+    允许已认证的用户更新其宗教信仰和饮食偏好。
+    """
     permission_classes = [IsAuthenticated]
 
-    def patch(self, request):
+    def patch(self, request, format=None):
         user = request.user
-        religious_belief = request.data.get('religious_belief', None)
-        dietary_restrictions = request.data.get('dietary_restrictions', None)
-        
-        # 验证 dietary_restrictions 是否为列表（可选）
-        if dietary_restrictions is not None and not isinstance(dietary_restrictions, list):
-            return Response({"error": "Invalid dietary_restrictions format, must be an array of strings."}, status=status.HTTP_400_BAD_REQUEST)
-
-        updated = False
-        if religious_belief is not None:
-            user.religious_belief = religious_belief
-            updated = True
-        if dietary_restrictions is not None:
-            user.dietary_restrictions = dietary_restrictions
-            updated = True
-
-        if updated:
-            user.save()
-
-        return Response({
-            "message": "Preferences updated successfully.",
-            "user": UserSerializer(user).data
-        }, status=status.HTTP_200_OK)
+        serializer = UserSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                "message": "Preferences updated successfully.",
+                "user": serializer.data
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response({
+                "code": 400,
+                "message": "上传失败",
+                "errors": serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
 
 
 # 用户详细信息视图
@@ -347,6 +340,65 @@ class DishDetailView(APIView):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+from .serializers import DishSearchSerializer
+from .models import Dish, Tag
+
+class DishSearchView(APIView):
+    """
+    接受标签列表，检索包含所有这些标签的菜品，返回菜品ID列表。
+    """
+    permission_classes = [AllowAny]
+
+    def post(self, request, format=None):
+        serializer = DishSearchSerializer(data=request.data)
+        if serializer.is_valid():
+            tags = serializer.validated_data['tags']
+
+            # 从数据库检索这些标签对象，如果有一个标签不存在，则结果可能为空
+            # 首先检测标签是否存在
+            existing_tags = Tag.objects.filter(name__in=tags)
+            if existing_tags.count() != len(tags):
+                # 有些标签在数据库中不存在，则无匹配菜品
+                return Response({
+                    "code": 200,
+                    "message": "搜索完成",
+                    "data": {
+                        "results": []
+                    }
+                }, status=status.HTTP_200_OK)
+
+            # 进行AND查询：逐步过滤菜品
+            dish_qs = Dish.objects.all()
+            for tag_name in tags:
+                dish_qs = dish_qs.filter(tags__name=tag_name)
+            
+            # 获取匹配菜品的ID列表
+            dish_ids = list(dish_qs.values_list('id', flat=True))
+
+            return Response({
+                "code": 200,
+                "message": "搜索完成",
+                "data": {
+                    "results": dish_ids
+                }
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response({
+                "code": 400,
+                "message": "请求无效",
+                "errors": serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+from .serializers import TagSerializer
+
+class TagListView(generics.ListAPIView):
+    """
+    API 视图，返回所有标签的列表。
+    """
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+    permission_classes = [AllowAny]  # 任何人都可以访问此 API
+
 import tempfile
 import whisper
 from opencc import OpenCC
@@ -496,5 +548,85 @@ class TextTranslationView(APIView):
             return Response({
                 "code": 400,
                 "message": "上传失败",
+                "errors": serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+from .serializers import AdvancedSearchSerializer
+from django.db.models import Q, Count
+# 进阶搜索视图
+class AdvancedSearchView(APIView):
+    """
+    进阶搜索API：
+    - 接收一段文本，可能是中英文菜名、描述或标签名。
+    - 可选的filter字段，用于进一步过滤结果。
+    - 返回匹配的菜品ID列表，按照偏好排序。
+    """
+    permission_classes = [AllowAny]
+    
+    def post(self, request, format=None):
+        serializer = AdvancedSearchSerializer(data=request.data)
+        if serializer.is_valid():
+            text = serializer.validated_data['text']
+            filter_data = serializer.validated_data.get('filter', [])
+            
+            # 初步搜索：根据文本匹配菜名、描述或标签名称
+            dishes = Dish.objects.filter(
+                Q(name__icontains=text) |
+                Q(name_en__icontains=text) |
+                Q(description__icontains=text) |
+                Q(description_en__icontains=text) |
+                Q(tags__name__icontains=text) |
+                Q(tags__name_en__icontains=text)
+            ).distinct()
+            
+            logger.debug(f"初步搜索结果数量：{dishes.count()}")
+            
+            if filter_data:
+                # 处理过滤器
+                dislike_tags = []
+                like_tags = []
+                for pref in filter_data:
+                    tag = pref.get('tag')
+                    preference = pref.get('preference')
+                    if preference == 'DISLIKE':
+                        dislike_tags.append(tag)
+                    elif preference == 'LIKE':
+                        like_tags.append(tag)
+                    # 'OTHER' 偏好不做处理
+                
+                logger.debug(f"过滤器 - 喜爱标签: {like_tags}, 不喜爱标签: {dislike_tags}")
+                
+                if dislike_tags:
+                    # 排除包含任何不喜爱标签的菜品
+                    dishes = dishes.exclude(tags__in=dislike_tags)
+                    logger.debug(f"应用DISLIKE过滤后结果数量：{dishes.count()}")
+                
+                if like_tags:
+                    # 注释每个菜品包含喜爱标签的数量
+                    dishes = dishes.annotate(
+                        like_count=Count('tags', filter=Q(tags__in=like_tags))
+                    ).order_by('-like_count')
+                    logger.debug(f"应用LIKE过滤后结果数量：{dishes.count()}")
+                else:
+                    # 如果没有LIKE标签，则不需要排序
+                    pass
+            
+            # 获取菜品ID列表
+            dish_ids = list(dishes.values_list('id', flat=True))
+            
+            logger.debug(f"最终返回的菜品ID列表：{dish_ids}")
+            
+            return Response({
+                "code": 200,
+                "message": "搜索完成",
+                "data": {
+                    "results": dish_ids
+                }
+            }, status=status.HTTP_200_OK)
+        else:
+            logger.error(f"进阶搜索请求无效：{serializer.errors}")
+            return Response({
+                "code": 400,
+                "message": "请求无效",
                 "errors": serializer.errors
             }, status=status.HTTP_400_BAD_REQUEST)
