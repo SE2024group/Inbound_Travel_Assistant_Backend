@@ -328,14 +328,17 @@ class DishDetailView(APIView):
 
     def get(self, request, pk):
         try:
+            # 获取菜品
             dish = Dish.objects.get(pk=pk)
         except Dish.DoesNotExist:
             return Response({'error': 'Dish not found.'}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = DishDetailSerializer(dish)
+        # 创建标签序列化器，并传递当前用户信息
+        serializer = DishDetailSerializer(dish, context={'user': request.user})
 
         # 如果用户已认证，记录浏览历史
         if request.user.is_authenticated:
+            # 记录用户浏览的菜品
             BrowsingHistory.objects.create(user=request.user, dish=dish)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
