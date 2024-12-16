@@ -389,8 +389,15 @@ class DishSearchView(APIView):
                 "errors": serializer.errors
             }, status=status.HTTP_400_BAD_REQUEST)
 
+from .serializers import TagSerializer
 
-
+class TagListView(generics.ListAPIView):
+    """
+    API 视图，返回所有标签的列表。
+    """
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+    permission_classes = [AllowAny]  # 任何人都可以访问此 API
 
 import tempfile
 import whisper
@@ -541,5 +548,85 @@ class TextTranslationView(APIView):
             return Response({
                 "code": 400,
                 "message": "上传失败",
+                "errors": serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+from .serializers import AdvancedSearchSerializer
+from django.db.models import Q, Count
+# 进阶搜索视图
+class AdvancedSearchView(APIView):
+    """
+    进阶搜索API：
+    - 接收一段文本，可能是中英文菜名、描述或标签名。
+    - 可选的filter字段，用于进一步过滤结果。
+    - 返回匹配的菜品ID列表，按照偏好排序。
+    """
+    permission_classes = [AllowAny]
+    
+    def post(self, request, format=None):
+        serializer = AdvancedSearchSerializer(data=request.data)
+        if serializer.is_valid():
+            text = serializer.validated_data['text']
+            filter_data = serializer.validated_data.get('filter', [])
+            
+            # 初步搜索：根据文本匹配菜名、描述或标签名称
+            dishes = Dish.objects.filter(
+                Q(name__icontains=text) |
+                Q(name_en__icontains=text) |
+                Q(description__icontains=text) |
+                Q(description_en__icontains=text) |
+                Q(tags__name__icontains=text) |
+                Q(tags__name_en__icontains=text)
+            ).distinct()
+            
+            logger.debug(f"初步搜索结果数量：{dishes.count()}")
+            
+            if filter_data:
+                # 处理过滤器
+                dislike_tags = []
+                like_tags = []
+                for pref in filter_data:
+                    tag = pref.get('tag')
+                    preference = pref.get('preference')
+                    if preference == 'DISLIKE':
+                        dislike_tags.append(tag)
+                    elif preference == 'LIKE':
+                        like_tags.append(tag)
+                    # 'OTHER' 偏好不做处理
+                
+                logger.debug(f"过滤器 - 喜爱标签: {like_tags}, 不喜爱标签: {dislike_tags}")
+                
+                if dislike_tags:
+                    # 排除包含任何不喜爱标签的菜品
+                    dishes = dishes.exclude(tags__in=dislike_tags)
+                    logger.debug(f"应用DISLIKE过滤后结果数量：{dishes.count()}")
+                
+                if like_tags:
+                    # 注释每个菜品包含喜爱标签的数量
+                    dishes = dishes.annotate(
+                        like_count=Count('tags', filter=Q(tags__in=like_tags))
+                    ).order_by('-like_count')
+                    logger.debug(f"应用LIKE过滤后结果数量：{dishes.count()}")
+                else:
+                    # 如果没有LIKE标签，则不需要排序
+                    pass
+            
+            # 获取菜品ID列表
+            dish_ids = list(dishes.values_list('id', flat=True))
+            
+            logger.debug(f"最终返回的菜品ID列表：{dish_ids}")
+            
+            return Response({
+                "code": 200,
+                "message": "搜索完成",
+                "data": {
+                    "results": dish_ids
+                }
+            }, status=status.HTTP_200_OK)
+        else:
+            logger.error(f"进阶搜索请求无效：{serializer.errors}")
+            return Response({
+                "code": 400,
+                "message": "请求无效",
                 "errors": serializer.errors
             }, status=status.HTTP_400_BAD_REQUEST)

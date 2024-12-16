@@ -199,3 +199,7 @@ class VoiceTranslationSerializer(serializers.Serializer):
 class TextTranslationSerializer(serializers.Serializer):
     text = serializers.CharField(required=True, help_text="需要翻译的文本")
     isChineseMode = serializers.BooleanField(required=True, help_text="是否为中文模式，True表示原文为中文")
+
+class AdvancedSearchSerializer(serializers.Serializer):
+    text = serializers.CharField(required=True, help_text="搜索文本，可以是中英文菜名、描述或标签名称。")
+    filter = DietaryPreferenceSerializer(many=True, required=False, help_text="可选的过滤器列表，包含标签和偏好。")
