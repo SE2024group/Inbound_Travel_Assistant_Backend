@@ -28,11 +28,13 @@ class CustomUser(AbstractUser):
         null=True, 
         help_text="用户的宗教信仰"
     )
-    dietary_restrictions = models.JSONField(
-        blank=True, 
-        null=True, 
-        help_text="用户的饮食禁忌列表（字符串列表）",
-        default=list  # 默认值为空列表
+    # 使用 ManyToManyField 通过 DietaryPreference 中间模型关联 Tag
+    dietary_restrictions = models.ManyToManyField(
+        'api.Tag',  # 使用字符串引用
+        through='api.DietaryPreference',  # 使用字符串引用
+        related_name='users_with_preferences',
+        blank=True,
+        help_text="用户的饮食偏好（喜爱、不喜爱、其他）"
     )
 
     def __str__(self):

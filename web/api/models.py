@@ -61,7 +61,7 @@ class CommentHistory(models.Model):
 class Tag(models.Model):
     name = models.CharField(max_length=50)
     name_en = models.CharField(max_length=50, null=True, blank=True)  # 英文标签名
-
+    
     def __str__(self):
         return self.name
 
@@ -81,3 +81,21 @@ class Image(models.Model):
 
     def __str__(self):
         return f"Image of {self.dish.name}"
+
+
+class DietaryPreference(models.Model):
+    PREFERENCE_CHOICES = [
+        ('LIKE', '喜爱'),
+        ('DISLIKE', '不喜爱'),
+        ('OTHER', '其他'),
+    ]
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='dietary_preferences')
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name='dietary_preferences')
+    preference = models.CharField(max_length=7, choices=PREFERENCE_CHOICES)
+
+    class Meta:
+        unique_together = ('user', 'tag')  # 每个用户每个标签只有一条记录
+
+    def __str__(self):
+        return f"{self.user.username} - {self.tag.name} - {self.get_preference_display()}"
