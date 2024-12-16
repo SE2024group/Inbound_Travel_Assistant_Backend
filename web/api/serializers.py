@@ -38,9 +38,21 @@ class OCRSerializer(serializers.Serializer):
     image = serializers.ImageField(required=True)
 
 class TagSerializer(serializers.ModelSerializer):
+    preference = serializers.SerializerMethodField()
+
     class Meta:
         model = Tag
-        fields = ['id', 'name', 'name_en']
+        fields = ['id', 'name', 'name_en', 'preference']
+
+    def get_preference(self, obj):
+        # 获取当前用户的饮食偏好
+        user = self.context.get('user')  # 从视图传递的上下文中获取用户
+        if user and user.is_authenticated:
+            # 查找该标签是否在用户的饮食偏好列表中
+            preference = DietaryPreference.objects.filter(user=user, tag=obj).first()
+            if preference:
+                return preference.preference
+        return 'OTHER'  # 如果没有记录或未登录，则返回 'OTHER'
 
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
