@@ -44,11 +44,20 @@ class FavoriteHistory(models.Model):
         return f"{self.user.username} favorited {self.dish.name} at {self.timestamp}"
 
 class CommentHistory(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='comment_history')
-    dish = models.ForeignKey('Dish', on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='comment_history'
+    )
+    dish = models.ForeignKey('Dish', on_delete=models.CASCADE, related_name='comments')
     comment = models.TextField()
+    rating = models.IntegerField(
+        choices=[(i, i) for i in range(6)],
+        default=0,
+        help_text="评分分数（0-5）"
+    )
     timestamp = models.DateTimeField(auto_now_add=True)
-
+    
     class Meta:
         ordering = ['-timestamp']
         verbose_name = 'Comment History'
@@ -57,6 +66,36 @@ class CommentHistory(models.Model):
     def __str__(self):
         return f"{self.user.username} commented on {self.dish.name} at {self.timestamp}"
 
+import os
+import uuid
+def comment_image_upload_to(instance, filename):
+    """
+    生成评论图片的唯一文件名，并指定上传路径。
+    
+    :param instance: CommentImage 实例
+    :param filename: 原始文件名
+    :return: 唯一化的文件路径
+    """
+    # 获取文件扩展名
+    ext = os.path.splitext(filename)[1]
+    # 生成唯一文件名
+    new_filename = f"{uuid.uuid4().hex}{ext}"
+    # 定义上传路径，按评论ID组织文件夹
+    return os.path.join('comment_images', str(instance.comment.id), new_filename)
+
+
+
+
+class CommentImage(models.Model):
+    comment = models.ForeignKey(
+        CommentHistory,
+        related_name='images',
+        on_delete=models.CASCADE
+    )
+    image = models.ImageField(upload_to=comment_image_upload_to)
+    
+    def __str__(self):
+        return f"Image for comment {self.comment.id}"
 class Tag(models.Model):
     name = models.CharField(max_length=50)
     name_en = models.CharField(max_length=50, null=True, blank=True)  # 英文标签名

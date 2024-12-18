@@ -165,6 +165,60 @@ class CommentHistorySerializer(serializers.ModelSerializer):
         fields = ['id', 'dish', 'comment', 'timestamp']
         read_only_fields = ['id', 'timestamp']
 
+
+from .models import CommentImage
+class CommentImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CommentImage
+        fields = ['id', 'image']
+
+class CommentSerializer(serializers.ModelSerializer):
+    images = CommentImageSerializer(many=True, read_only=True)
+    user_id = serializers.IntegerField(source='user.id', read_only=True)
+    username = serializers.CharField(source='user.username', read_only=True)
+    
+    class Meta:
+        model = CommentHistory
+        fields = ['id', 'user_id', 'username', 'comment', 'rating', 'images', 'timestamp']
+
+class CommentUploadSerializer(serializers.ModelSerializer):
+    images = serializers.ListField(
+        child=serializers.ImageField(max_length=100000, allow_empty_file=False, use_url=False),
+        allow_empty=True,
+        max_length=9,
+        required=False
+    )
+
+    class Meta:
+        model = CommentHistory
+        fields = ['dish', 'comment', 'rating', 'images']
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        images_data = validated_data.pop('images', [])
+        comment = CommentHistory.objects.create(user=user, **validated_data)
+        for image_data in images_data:
+            CommentImage.objects.create(comment=comment, image=image_data)
+        return comment
+
+class DishInCommentHistorySerializer(serializers.ModelSerializer):
+    images = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Dish
+        fields = ['id', 'name', 'name_en', 'images']
+
+    def get_images(self, obj):
+        return [image.image_url for image in obj.images.all()]
+
+
+class UserCommentHistorySerializer(serializers.ModelSerializer):
+    dish = DishInCommentHistorySerializer(read_only=True)
+
+    class Meta:
+        model = CommentHistory
+        fields = ['id', 'dish', 'comment', 'rating', 'images', 'timestamp']
+
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
     password2 = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})

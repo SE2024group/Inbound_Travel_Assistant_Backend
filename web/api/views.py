@@ -691,3 +691,95 @@ class FavoriteListView(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
         return Dish.objects.filter(favorite_histories__user=user).distinct()
+
+
+from .serializers import (
+    CommentUploadSerializer,
+    CommentSerializer,
+)
+from .models import CommentHistory, CommentImage
+from rest_framework.parsers import MultiPartParser, FormParser
+
+class CommentUploadView(APIView):
+    """
+    API 视图，允许用户上传评论，包括评论内容、评分分数和最多9张图片。
+    """
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
+
+    def post(self, request, format=None):
+        serializer = CommentUploadSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            comment = serializer.save()
+            read_serializer = CommentSerializer(comment)
+            return Response(read_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class DishCommentsView(generics.ListAPIView):
+    """
+    API 视图，获取指定菜品的所有评论。
+    """
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        dish_id = self.kwargs.get('dish_id')
+        return CommentHistory.objects.filter(dish_id=dish_id).order_by('-timestamp')
+
+from .serializers import UserCommentHistorySerializer, CommentSerializer
+class UserCommentHistoryView(generics.ListAPIView):
+    """
+    API 视图，获取当前用户的评论历史。
+    返回每条评论所属的菜品的ID、中英文名称及图片。
+    """
+    serializer_class = UserCommentHistorySerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return CommentHistory.objects.filter(user=user).order_by('-timestamp')
+
+
+from .permissions import IsOwnerOrAdmin
+
+class CommentDeleteView(generics.DestroyAPIView):
+    """
+    API 视图，允许用户删除自己的评论，管理员可以删除任何评论。
+    """
+    queryset = CommentHistory.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated, IsOwnerOrAdmin]
+
+    def get_object(self):
+        comment_id = self.kwargs.get('comment_id')
+        comment = get_object_or_404(CommentHistory, pk=comment_id)
+        self.check_object_permissions(self.request, comment)
+        return comment
+
+    def delete(self, request, *args, **kwargs):
+        """
+        重写destroy方法，以返回自定义的删除成功消息。
+        """
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response({'detail': '评论已成功删除。'}, status=status.HTTP_200_OK)
+
+
+
+
+class DishDetailView(APIView):
+    """
+    API 视图，获取指定ID的菜品详情。
+    返回菜品的详细信息，包括标签的喜爱状态。
+    """
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get(self, request, pk):
+        dish = get_object_or_404(Dish, pk=pk)
+        serializer = DishDetailSerializer(dish, context={'user': request.user})
+        
+        # 如果用户已认证，记录浏览历史
+        if request.user.is_authenticated:
+            BrowsingHistory.objects.create(user=request.user, dish=dish)
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)

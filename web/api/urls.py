@@ -5,7 +5,9 @@ from .views import (
     FavoriteHistoryListView, CommentHistoryListView,
     OCRView, DishDetailView, LogoutView, VoiceTranslationView,
     UpdateUserPreferencesView, TextTranslationView, DishSearchView,
-    TagListView, AdvancedSearchView, FavoriteToggleView, FavoriteListView
+    TagListView, AdvancedSearchView, FavoriteToggleView, FavoriteListView,
+    CommentUploadView, DishCommentsView, UserCommentHistoryView,
+    CommentDeleteView,
 )
 
 urlpatterns = [
@@ -19,6 +21,10 @@ urlpatterns = [
     path('like-history/', LikeHistoryListView.as_view(), name='like-history'),
     path('favorite-history/', FavoriteHistoryListView.as_view(), name='favorite-history'),
     path('comment-history/', CommentHistoryListView.as_view(), name='comment-history'),
+    path('comments/upload/', CommentUploadView.as_view(), name='comment-upload'),  # 上传评论
+    path('comments/<int:comment_id>/delete/', CommentDeleteView.as_view(), name='comment-delete'),  # 删除评论
+    path('dish/<int:dish_id>/comments/', DishCommentsView.as_view(), name='dish-comments'),  # 获取菜品评论列表
+    path('user/comments/', UserCommentHistoryView.as_view(), name='user-comments'),  # 获取用户评论历史
     path('ocr/', OCRView.as_view(), name='ocr'),
     path('dish/<int:pk>/', DishDetailView.as_view(), name='dish-detail'),
     path('voice-translation/', VoiceTranslationView.as_view(), name='voice-translation'),
@@ -28,5 +34,4 @@ urlpatterns = [
     path('tags/', TagListView.as_view(), name='tag-list'),  # 添加标签列表路由
     path('favorite/<int:dish_id>/', FavoriteToggleView.as_view(), name='favorite-toggle'),  # 收藏与取消收藏
     path('favorites/', FavoriteListView.as_view(), name='favorite-list'),  # 获取收藏列表
-
 ]
