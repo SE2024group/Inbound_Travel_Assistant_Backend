@@ -412,8 +412,8 @@ from .utils import translate_text  # 导入翻译函数
 # 初始化转换器，从繁体中文转换到简体中文
 converter = OpenCC('t2s')
 
-# 加载 Whisper 模型（CPU 版本）
-model = None # whisper.load_model("base")  # "base" 模型适用于 CPU，较小且速度较快
+# 加载 Whisper 模型（CPU 版本）None # 
+model = whisper.load_model("base")  # "base" 模型适用于 CPU，较小且速度较快
 logger = logging.getLogger(__name__)
 
 class VoiceTranslationView(APIView):
