@@ -30,10 +30,9 @@ class LikeHistory(models.Model):
     def __str__(self):
         return f"{self.user.username} liked {self.dish.name} at {self.timestamp}"
 
-
 class FavoriteHistory(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='favorite_history')
-    dish = models.ForeignKey('Dish', on_delete=models.CASCADE)
+    dish = models.ForeignKey('Dish', on_delete=models.CASCADE, related_name='favorite_histories')  # 添加 related_name
     timestamp = models.DateTimeField(auto_now_add=True)
 
     class Meta:

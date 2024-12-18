@@ -5,7 +5,7 @@ from .views import (
     FavoriteHistoryListView, CommentHistoryListView,
     OCRView, DishDetailView, LogoutView, VoiceTranslationView,
     UpdateUserPreferencesView, TextTranslationView, DishSearchView,
-    TagListView, AdvancedSearchView
+    TagListView, AdvancedSearchView, FavoriteToggleView, FavoriteListView
 )
 
 urlpatterns = [
@@ -26,5 +26,7 @@ urlpatterns = [
     path('dish/search/', DishSearchView.as_view(), name='dish-search'),  # 新的搜索接口
     path('dish/advanced_search/', AdvancedSearchView.as_view(), name='advanced-dish-search'),  # 添加进阶搜索路由
     path('tags/', TagListView.as_view(), name='tag-list'),  # 添加标签列表路由
+    path('favorite/<int:dish_id>/', FavoriteToggleView.as_view(), name='favorite-toggle'),  # 收藏与取消收藏
+    path('favorites/', FavoriteListView.as_view(), name='favorite-list'),  # 获取收藏列表
 
 ]
