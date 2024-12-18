@@ -208,6 +208,30 @@ class VoiceTranslationSerializer(serializers.Serializer):
             raise serializers.ValidationError("文件大小不足（1KB）。")
         return value
 
+from .models import FavoriteHistory
+
+class FavoriteSerializer(serializers.Serializer):
+    dish_id = serializers.IntegerField()
+
+    def validate_dish_id(self, value):
+        try:
+            dish = Dish.objects.get(pk=value)
+        except Dish.DoesNotExist:
+            raise serializers.ValidationError("指定的菜品不存在。")
+        return value
+
+
+class FavoriteDishSerializer(serializers.ModelSerializer):
+    images = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Dish
+        fields = ['id', 'name', 'name_en', 'images']
+
+    def get_images(self, obj):
+        # 返回所有相关图片的URL列表
+        return [image.image_url for image in obj.images.all()]
+
 class TextTranslationSerializer(serializers.Serializer):
     text = serializers.CharField(required=True, help_text="需要翻译的文本")
     isChineseMode = serializers.BooleanField(required=True, help_text="是否为中文模式，True表示原文为中文")

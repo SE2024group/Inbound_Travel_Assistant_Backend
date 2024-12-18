@@ -633,3 +633,61 @@ class AdvancedSearchView(APIView):
                 "message": "请求无效",
                 "errors": serializer.errors
             }, status=status.HTTP_400_BAD_REQUEST)
+
+from .serializers import FavoriteSerializer
+from .models import Dish, FavoriteHistory
+from django.shortcuts import get_object_or_404
+
+class FavoriteToggleView(APIView):
+    """
+    API 视图，处理用户收藏与取消收藏某道菜的操作。
+    POST 请求用于收藏，DELETE 请求用于取消收藏。
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, dish_id):
+        """
+        收藏指定ID的菜品。
+        """
+        serializer = FavoriteSerializer(data={'dish_id': dish_id})
+        serializer.is_valid(raise_exception=True)
+        dish_id = serializer.validated_data['dish_id']
+        dish = get_object_or_404(Dish, pk=dish_id)
+        user = request.user
+
+        # 检查是否已经收藏
+        if FavoriteHistory.objects.filter(user=user, dish=dish).exists():
+            return Response({'detail': '该菜品已在收藏列表中。'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # 添加到收藏列表
+        FavoriteHistory.objects.create(user=user, dish=dish)
+        return Response({'detail': '菜品已成功添加到收藏列表。'}, status=status.HTTP_201_CREATED)
+
+    def delete(self, request, dish_id):
+        """
+        取消收藏指定ID的菜品。
+        """
+        dish = get_object_or_404(Dish, pk=dish_id)
+        user = request.user
+
+        try:
+            favorite = FavoriteHistory.objects.get(user=user, dish=dish)
+            favorite.delete()
+            return Response({'detail': '菜品已成功从收藏列表中移除。'}, status=status.HTTP_200_OK)
+        except FavoriteHistory.DoesNotExist:
+            return Response({'detail': '该菜品不在您的收藏列表中。'}, status=status.HTTP_400_BAD_REQUEST)
+
+from .serializers import FavoriteDishSerializer
+from .models import FavoriteHistory
+
+class FavoriteListView(generics.ListAPIView):
+    """
+    API 视图，获取当前用户的收藏列表。
+    返回收藏的菜品的图片、英文名称、中文名称和ID。
+    """
+    serializer_class = FavoriteDishSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Dish.objects.filter(favorite_histories__user=user).distinct()
