@@ -92,7 +92,8 @@ class CommentImage(models.Model):
         related_name='images',
         on_delete=models.CASCADE
     )
-    image = models.ImageField(upload_to=comment_image_upload_to)
+    image_url = models.URLField(max_length=500, blank=True, null=True)  # 存储腾讯云COS的URL
+
     
     def __str__(self):
         return f"Image for comment {self.comment.id}"

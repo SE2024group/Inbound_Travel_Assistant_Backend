@@ -12,12 +12,11 @@ def user_avatar_upload_to(instance, filename):
     ext = os.path.splitext(filename)[1]
     # 使用uuid生成唯一文件名
     new_filename = f"{uuid.uuid4().hex}{ext}"
-    print(os.path.join('avatars', str(instance.id), new_filename),'-----------------')
     return os.path.join('avatars', str(instance.id), new_filename)
   
 class CustomUser(AbstractUser):
     nickname = models.CharField(max_length=150, blank=True)
-    avatar = models.ImageField(upload_to=user_avatar_upload_to, blank=True, null=True)
+    avatar = models.URLField(max_length=500, blank=True, null=True)  # 改为URLField存储COS的URL
     personality_description = models.TextField(blank=True, null=True)
     signup_date = models.DateField(null=True, blank=True, help_text="用户注册日期（年月日）")
     

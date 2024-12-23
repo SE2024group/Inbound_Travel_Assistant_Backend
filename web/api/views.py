@@ -8,6 +8,7 @@ from django.conf import settings
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from django.contrib.auth import get_user_model
+from qcloud_cos import CosConfig, CosS3Client
 from PIL import Image
 import uuid
 import base64
@@ -18,6 +19,16 @@ import random
 
 User = get_user_model()
 
+# 初始化COS客户端
+def get_cos_client():
+    config = CosConfig(
+        Region=settings.COS_REGION,
+        SecretId=settings.COS_SECRET_ID,
+        SecretKey=settings.COS_SECRET_KEY,
+        Token=None,  # 使用长期密钥
+        Scheme='https'
+    )
+    return CosS3Client(config)
 
 class EchoView(APIView):
     def post(self, request):
@@ -132,30 +143,72 @@ class UpdateUserPreferencesView(APIView):
                 "errors": serializer.errors
             }, status=status.HTTP_400_BAD_REQUEST)
 
+from rest_framework.parsers import MultiPartParser, FormParser
+from django.contrib.auth import get_user_model
+CustomUser = get_user_model()
 
-# 用户详细信息视图
 class UserDetailView(generics.RetrieveUpdateAPIView):
-    queryset = User.objects.all()
+    queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]  # 允许文件上传
 
     def get_object(self):
         return self.request.user
-        
+
     def update(self, request, *args, **kwargs):
         print("Update user info")
         partial = kwargs.pop('partial', True)  # 允许部分更新
         instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+
+        # 创建一个可变的副本以修改数据
+        data = request.data.copy()
+
+        # 检查是否上传了头像
+        if 'avatar' in request.FILES:
+            image = request.FILES['avatar']
+            cos_client = get_cos_client()
+            cos_bucket = settings.COS_BUCKET
+            cos_region = settings.COS_REGION
+            cos_base_url = settings.COS_BASE_URL
+
+            # 生成唯一的对象键
+            file_extension = os.path.splitext(image.name)[1].lower()  # 获取文件扩展名并转为小写
+            unique_filename = f"{uuid.uuid4().hex}{file_extension}"
+            object_key = f"avatars/{instance.id}/{unique_filename}"
+
+            try:
+                # 上传图片内容到COS
+                response = cos_client.put_object(
+                    Bucket=cos_bucket,
+                    Body=image.read(),  # 读取文件内容
+                    Key=object_key,
+                    StorageClass='STANDARD'
+                )
+                # 生成图片的下载URL
+                image_url = f"{cos_base_url}/{object_key}"
+                # 将 'avatar' 字段更新为图片URL
+                data['avatar'] = image_url
+            except CosServiceError as e:
+                logging.error(f"上传头像到COS失败: {e}")
+                return Response({
+                    "code": 500,
+                    "message": "头像上传失败",
+                    "errors": str(e)
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        # 进行序列化和更新
+        serializer = self.get_serializer(instance, data=data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
         # 日志记录
         if 'avatar' in request.FILES:
-            print(f"User {instance.username} uploaded avatar: {instance.avatar.url}")
-            logger.info(f"User {instance.username} uploaded avatar: {instance.avatar.url}")
+            print(f"User {instance.username} uploaded avatar: {instance.avatar}")
+            logging.info(f"User {instance.username} uploaded avatar: {instance.avatar}")
 
         return Response(serializer.data)
+
 
 # 浏览历史视图
 class BrowsingHistoryListView(generics.ListAPIView):
@@ -345,10 +398,11 @@ class DishDetailView(APIView):
 
 from .serializers import DishSearchSerializer
 from .models import Dish, Tag
+from django.db.models import Q, Count
 
 class DishSearchView(APIView):
     """
-    接受标签列表，检索包含所有这些标签的菜品，返回菜品ID列表。
+    接受标签列表，检索包含所有这些标签（中文名或英文名）的菜品，返回菜品ID列表。
     """
     permission_classes = [AllowAny]
 
@@ -356,27 +410,17 @@ class DishSearchView(APIView):
         serializer = DishSearchSerializer(data=request.data)
         if serializer.is_valid():
             tags = serializer.validated_data['tags']
-
-            # 从数据库检索这些标签对象，如果有一个标签不存在，则结果可能为空
-            # 首先检测标签是否存在
-            existing_tags = Tag.objects.filter(name__in=tags)
-            if existing_tags.count() != len(tags):
-                # 有些标签在数据库中不存在，则无匹配菜品
-                return Response({
-                    "code": 200,
-                    "message": "搜索完成",
-                    "data": {
-                        "results": []
-                    }
-                }, status=status.HTTP_200_OK)
-
-            # 进行AND查询：逐步过滤菜品
-            dish_qs = Dish.objects.all()
-            for tag_name in tags:
-                dish_qs = dish_qs.filter(tags__name=tag_name)
+            
+            # 使用Q对象构建动态查询条件，以匹配name或name_en
+            query = Q()
+            for tag in tags:
+                query &= Q(tags__name__iexact=tag) | Q(tags__name_en__iexact=tag)
+            
+            # 检索匹配所有标签的菜品
+            matched_dishes = Dish.objects.filter(query).distinct()
             
             # 获取匹配菜品的ID列表
-            dish_ids = list(dish_qs.values_list('id', flat=True))
+            dish_ids = list(matched_dishes.values_list('id', flat=True))
 
             return Response({
                 "code": 200,
@@ -391,7 +435,6 @@ class DishSearchView(APIView):
                 "message": "请求无效",
                 "errors": serializer.errors
             }, status=status.HTTP_400_BAD_REQUEST)
-
 from .serializers import TagSerializer
 
 class TagListView(generics.ListAPIView):
@@ -555,7 +598,6 @@ class TextTranslationView(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
 from .serializers import AdvancedSearchSerializer
-from django.db.models import Q, Count
 # 进阶搜索视图
 class AdvancedSearchView(APIView):
     """
@@ -699,7 +741,6 @@ from .serializers import (
 )
 from .models import CommentHistory, CommentImage
 from rest_framework.parsers import MultiPartParser, FormParser
-
 class CommentUploadView(APIView):
     """
     API 视图，允许用户上传评论，包括评论内容、评分分数和最多9张图片。
@@ -710,10 +751,49 @@ class CommentUploadView(APIView):
     def post(self, request, format=None):
         serializer = CommentUploadSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
+            # 保存评论（不包含图片）
             comment = serializer.save()
+            images = request.FILES.getlist('images')
+            cos_client = get_cos_client()
+            cos_bucket = settings.COS_BUCKET
+            cos_region = settings.COS_REGION
+            cos_base_url = settings.COS_BASE_URL
+
+            for image in images:
+                # 生成唯一的对象键
+                file_extension = os.path.splitext(image.name)[1].lower()  # 获取文件扩展名并转为小写
+                unique_filename = f"{uuid.uuid4().hex}{file_extension}"
+                object_key = f"comment_images/{comment.id}/{unique_filename}"
+
+                try:
+                    # 上传图片内容到COS
+                    response = cos_client.put_object(
+                        Bucket=cos_bucket,
+                        Body=image.read(),  # 读取文件内容
+                        Key=object_key,
+                        StorageClass='STANDARD'
+                    )
+                    # 生成图片的下载URL
+                    image_url = f"{cos_base_url}/{object_key}"
+                    # 创建CommentImage实例
+                    CommentImage.objects.create(comment=comment, image_url=image_url)
+                except CosServiceError as e:
+                    logging.error(f"上传图片到COS失败: {e}")
+                    return Response({
+                        "code": 500,
+                        "message": "图片上传失败",
+                        "errors": str(e)
+                    }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+            # 序列化评论数据，包括图片URL
             read_serializer = CommentSerializer(comment, context={'request': request})
             return Response(read_serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({
+                "code": 400,
+                "message": "请求无效",
+                "errors": serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
 
 class DishCommentsView(generics.ListAPIView):
     """
@@ -725,6 +805,11 @@ class DishCommentsView(generics.ListAPIView):
     def get_queryset(self):
         dish_id = self.kwargs.get('dish_id')
         return CommentHistory.objects.filter(dish_id=dish_id).order_by('-timestamp')
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context.update({"request": self.request})  # 确保传递了 request 对象
+        return context
 
 from .serializers import UserCommentHistorySerializer, CommentSerializer
 class UserCommentHistoryView(generics.ListAPIView):
