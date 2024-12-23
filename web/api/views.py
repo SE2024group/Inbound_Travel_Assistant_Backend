@@ -446,18 +446,44 @@ class TagListView(generics.ListAPIView):
     permission_classes = [AllowAny]  # 任何人都可以访问此 API
 
 import tempfile
-import whisper
-from opencc import OpenCC
 from .serializers import VoiceTranslationSerializer
 import logging
 from .utils import translate_text  # 导入翻译函数
-
-# 初始化转换器，从繁体中文转换到简体中文
-converter = OpenCC('t2s')
-
-# 加载 Whisper 模型（CPU 版本）
-model = None # whisper.load_model("base")  # "base" 模型适用于 CPU，较小且速度较快
 logger = logging.getLogger(__name__)
+
+import azure.cognitiveservices.speech as speechsdk
+from pydub import AudioSegment
+from pydub.exceptions import CouldntDecodeError
+
+
+
+# 设置日志
+logger = logging.getLogger(__name__)
+
+def azure_speech_to_text(audio_file_path, language="zh-CN"):
+    speech_key = settings.AZURE_SPEECH_KEY
+    service_region = settings.AZURE_SPEECH_REGION
+
+    if not speech_key or not service_region:
+        raise ValueError("Azure Speech service credentials are not set in settings.")
+
+    speech_config = speechsdk.SpeechConfig(subscription=speech_key, region=service_region)
+    speech_config.speech_recognition_language = language
+
+    audio_input = speechsdk.AudioConfig(filename=audio_file_path)
+    speech_recognizer = speechsdk.SpeechRecognizer(speech_config=speech_config, audio_config=audio_input)
+
+    result = speech_recognizer.recognize_once_async().get()
+
+    if result.reason == speechsdk.ResultReason.RecognizedSpeech:
+        return result.text.strip()
+    elif result.reason == speechsdk.ResultReason.NoMatch:
+        raise ValueError("Azure Speech service could not recognize the speech.")
+    elif result.reason == speechsdk.ResultReason.Canceled:
+        cancellation = result.cancellation_details
+        raise ValueError(f"Azure Speech service canceled: {cancellation.reason}. Details: {cancellation.error_details}")
+    else:
+        raise ValueError("Azure Speech service returned an unknown result.")
 
 class VoiceTranslationView(APIView):
     """
@@ -473,38 +499,45 @@ class VoiceTranslationView(APIView):
             is_chinese_mode = serializer.validated_data['isChineseMode']
 
             print("is_chinese_mode:", is_chinese_mode)
-            
+
             # 使用临时文件保存上传的语音文件
             with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(voice_file.name)[1]) as temp_file:
                 for chunk in voice_file.chunks():
                     temp_file.write(chunk)
                 temp_file_path = temp_file.name
-            
+
             try:
                 # 选择语言
-                language = "zh" if is_chinese_mode else "en"
-                
-                # 使用 Whisper 模型进行转录
-                # result = model.transcribe(temp_file_path, language=language)
-                transcribed_text = '使用 Whisper Model 进行 Transform' # result['text'].strip()
-                
-                # 如果是中文模式，进行简繁体转换
-                if is_chinese_mode:
-                    transcribed_text = converter.convert(transcribed_text)
-                
+                language = "zh-CN" if is_chinese_mode else "en-US"
+
+                # 验证和转换音频格式
+                try:
+                    audio = AudioSegment.from_file(temp_file_path)
+                    # 转换为 WAV PCM 16kHz 单声道
+                    audio = audio.set_frame_rate(16000).set_channels(1).set_sample_width(2)
+                    converted_file_path = f"{temp_file_path}_converted.wav"
+                    audio.export(converted_file_path, format="wav")
+                    os.remove(temp_file_path)  # 删除原始上传的文件
+                    audio_file_to_use = converted_file_path
+                except CouldntDecodeError:
+                    raise ValueError("无法解码上传的音频文件。请上传有效的音频文件。")
+
+                # 使用 Azure 语音服务进行转录
+                transcribed_text = azure_speech_to_text(audio_file_to_use, language=language)
+
                 print(f"Transcribed text: {transcribed_text}")
 
                 logger.info(f"Transcribed text: {transcribed_text}")
-                
+
                 # 调用翻译 API 将文本翻译成目标语言
                 # 如果 isChineseMode 是 True，翻译到英文；否则翻译到中文
                 if is_chinese_mode:
                     translated_text = translate_text(transcribed_text, from_lang="ZH", to_lang="EN")
                 else:
                     translated_text = translate_text(transcribed_text, from_lang="EN", to_lang="ZH")
-                
+
                 print(f"Translated text: {translated_text}")
-                
+
                 response_data = {
                     "code": 200,
                     "message": "上传成功",
@@ -514,9 +547,9 @@ class VoiceTranslationView(APIView):
                         "isChineseMode": is_chinese_mode
                     }
                 }
-                                
+
                 return Response(response_data, status=status.HTTP_200_OK)
-            
+
             except Exception as e:
                 logger.error(f"Error during voice transcription or translation: {str(e)}")
                 return Response({
@@ -526,7 +559,10 @@ class VoiceTranslationView(APIView):
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             finally:
                 # 删除临时文件
-                os.remove(temp_file_path)
+                if os.path.exists(temp_file_path):
+                    os.remove(temp_file_path)
+                if 'converted_file_path' in locals() and os.path.exists(converted_file_path):
+                    os.remove(converted_file_path)
         else:
             logger.warning(f"Voice translation upload failed: {serializer.errors}")
             return Response({

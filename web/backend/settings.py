@@ -41,6 +41,10 @@ COS_REGION = env('COS_REGION')
 COS_BUCKET = env('COS_BUCKET')
 COS_BASE_URL = f"https://{COS_BUCKET}.cos.{COS_REGION}.myqcloud.com"
 
+# Azure语音服务配置
+AZURE_SPEECH_KEY = env('AZURE_SPEECH_KEY')
+AZURE_SPEECH_REGION = env('AZURE_SPEECH_REGION')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
