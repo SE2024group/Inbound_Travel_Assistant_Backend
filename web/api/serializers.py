@@ -308,10 +308,10 @@ class FavoriteSerializer(serializers.Serializer):
 
 class FavoriteDishSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField()
-
+    tags = TagSerializer(many=True, read_only=True)
     class Meta:
         model = Dish
-        fields = ['id', 'name', 'name_en', 'images']
+        fields = ['id', 'name', 'name_en', 'images', 'tags']
 
     def get_images(self, obj):
         # 返回所有相关图片的URL列表
