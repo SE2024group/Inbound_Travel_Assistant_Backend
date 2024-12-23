@@ -711,7 +711,7 @@ class CommentUploadView(APIView):
         serializer = CommentUploadSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             comment = serializer.save()
-            read_serializer = CommentSerializer(comment)
+            read_serializer = CommentSerializer(comment, context={'request': request})
             return Response(read_serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -738,7 +738,10 @@ class UserCommentHistoryView(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
         return CommentHistory.objects.filter(user=user).order_by('-timestamp')
-
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context.update({"request": self.request})
+        return context
 
 from .permissions import IsOwnerOrAdmin
 

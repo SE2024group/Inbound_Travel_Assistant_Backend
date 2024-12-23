@@ -171,15 +171,33 @@ class CommentImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommentImage
         fields = ['id', 'image']
+    
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        request = self.context.get('request')
+        if instance.image:
+            representation['image'] = request.build_absolute_uri(instance.image.url) if request else instance.image.url
+        else:
+            representation['image'] = None
+        return representation
 
 class CommentSerializer(serializers.ModelSerializer):
     images = CommentImageSerializer(many=True, read_only=True)
     user_id = serializers.IntegerField(source='user.id', read_only=True)
     username = serializers.CharField(source='user.username', read_only=True)
-    
+    avatar = serializers.SerializerMethodField()  # 新增avatar字段
+
     class Meta:
         model = CommentHistory
-        fields = ['id', 'user_id', 'username', 'comment', 'rating', 'images', 'timestamp']
+        fields = ['id', 'user_id', 'username', 'avatar', 'comment', 'rating', 'images', 'timestamp']
+
+    def get_avatar(self, obj):
+        request = self.context.get('request')
+        if obj.user.avatar:
+            # 获取完整的URL
+            avatar_url = obj.user.avatar.url
+            return request.build_absolute_uri(avatar_url) if request else avatar_url
+        return None  # 如果用户没有上传头像，返回None或您希望的默认值
 
 class CommentUploadSerializer(serializers.ModelSerializer):
     images = serializers.ListField(
@@ -214,6 +232,7 @@ class DishInCommentHistorySerializer(serializers.ModelSerializer):
 
 class UserCommentHistorySerializer(serializers.ModelSerializer):
     dish = DishInCommentHistorySerializer(read_only=True)
+    images = CommentImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = CommentHistory
