@@ -193,12 +193,10 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = ['id', 'user_id', 'username', 'avatar', 'comment', 'rating', 'images', 'timestamp']
 
     def get_avatar(self, obj):
-        request = self.context.get('request')
-        if obj.user.avatar:
-            # 获取完整的URL
-            avatar_url = obj.user.avatar.url
-            return request.build_absolute_uri(avatar_url) if request else avatar_url
-        return None  # 如果用户没有上传头像，返回None或您希望的默认值
+        """
+        返回评论用户的头像URL。
+        """
+        return obj.user.avatar  # 直接返回字符串URL，不再访问 .url 属性
 
 class CommentUploadSerializer(serializers.ModelSerializer):
     images = serializers.ListField(
