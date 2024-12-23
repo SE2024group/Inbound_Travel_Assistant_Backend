@@ -102,6 +102,7 @@ class UserSerializer(serializers.ModelSerializer):
         many=True,
         required=False,
     )
+    avatar = serializers.URLField(required=False, allow_null=True)
 
     class Meta:
         model = User
@@ -170,16 +171,16 @@ from .models import CommentImage
 class CommentImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommentImage
-        fields = ['id', 'image']
+        fields = ['id', 'image_url']
     
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        request = self.context.get('request')
-        if instance.image:
-            representation['image'] = request.build_absolute_uri(instance.image.url) if request else instance.image.url
-        else:
-            representation['image'] = None
-        return representation
+    # def to_representation(self, instance):
+    #     representation = super().to_representation(instance)
+    #     request = self.context.get('request')
+    #     if instance.image:
+    #         representation['image'] = request.build_absolute_uri(instance.image.url) if request else instance.image.url
+    #     else:
+    #         representation['image'] = None
+    #     return representation
 
 class CommentSerializer(serializers.ModelSerializer):
     images = CommentImageSerializer(many=True, read_only=True)
@@ -211,13 +212,24 @@ class CommentUploadSerializer(serializers.ModelSerializer):
         model = CommentHistory
         fields = ['dish', 'comment', 'rating', 'images']
 
+    def validate_images(self, value):
+        allowed_content_types = ['image/jpeg', 'image/png', 'image/gif']
+        max_size = 5 * 1024 * 1024  # 5MB
+
+        for image in value:
+            if image.content_type not in allowed_content_types:
+                raise serializers.ValidationError(f"不支持的文件类型: {image.content_type}")
+            if image.size > max_size:
+                raise serializers.ValidationError(f"图片大小不能超过5MB。")
+
+        return value
+
     def create(self, validated_data):
         user = self.context['request'].user
         images_data = validated_data.pop('images', [])
         comment = CommentHistory.objects.create(user=user, **validated_data)
-        for image_data in images_data:
-            CommentImage.objects.create(comment=comment, image=image_data)
         return comment
+
 
 class DishInCommentHistorySerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField()
@@ -296,10 +308,10 @@ class FavoriteSerializer(serializers.Serializer):
 
 class FavoriteDishSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField()
-
+    tags = TagSerializer(many=True, read_only=True)
     class Meta:
         model = Dish
-        fields = ['id', 'name', 'name_en', 'images']
+        fields = ['id', 'name', 'name_en', 'images', 'tags']
 
     def get_images(self, obj):
         # 返回所有相关图片的URL列表

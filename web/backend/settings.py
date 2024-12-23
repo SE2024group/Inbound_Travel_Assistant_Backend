@@ -34,6 +34,14 @@ OCR_API_KEY = env('OCR_API_KEY')
 # 读取环境变量
 COLA_KEY = env('COLA_KEY')
 TRANSLATE_API_URL = env('TRANSLATE_API_URL')
+
+COS_SECRET_ID = env('COS_SECRET_ID')
+COS_SECRET_KEY = env('COS_SECRET_KEY')
+COS_REGION = env('COS_REGION')
+COS_BUCKET = env('COS_BUCKET')
+COS_BASE_URL = f"https://{COS_BUCKET}.cos.{COS_REGION}.myqcloud.com"
+
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
