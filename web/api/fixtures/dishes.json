@@ -709,9 +709,9 @@
     },
     {
       "name": "北京泡菜",
-      "name_en": "Sichuan Pickles",
-      "description": "一种传统的四川开胃菜，将蔬菜在调味盐水中发酵，口味酸辣爽口。",
-      "description_en": "A traditional Sichuan appetizer made by fermenting vegetables in seasoned brine, giving them a tangy and spicy flavor.",
+      "name_en": "Peking Pickles",
+      "description": "一种传统的北京开胃菜，将蔬菜在调味盐水中发酵，口味酸辣爽口。",
+      "description_en": "A traditional Peking appetizer made by fermenting vegetables in seasoned brine, giving them a tangy and spicy flavor.",
       "tags": [
         "前菜",
         "素食",

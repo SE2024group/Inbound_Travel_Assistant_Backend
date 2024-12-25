@@ -6,6 +6,7 @@ from rest_framework import status
 from .serializers import EchoSerializer, LoginSerializer, LoginResponseSerializer, UserInfoSerializer, OCRSerializer
 from django.conf import settings
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from django.contrib.auth import get_user_model
 from qcloud_cos import CosConfig, CosS3Client
@@ -31,6 +32,9 @@ def get_cos_client():
     return CosS3Client(config)
 
 class EchoView(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request):
+        return Response({'message': 'Hello, world!'})
     def post(self, request):
         serializer = EchoSerializer(data=request.data)
         if serializer.is_valid():
@@ -39,7 +43,6 @@ class EchoView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 from rest_framework import generics, status
-from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authtoken.models import Token  # 使用 Token 认证
 from .serializers import (
     RegisterSerializer, LoginSerializer, UserSerializer,
