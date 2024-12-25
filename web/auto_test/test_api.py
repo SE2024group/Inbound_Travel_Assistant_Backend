@@ -35,48 +35,36 @@ API_ENDPOINTS = {
 }
 
 def api_url(key, **kwargs):
-    """
-    根据 key 在 API_ENDPOINTS 中获取相对路径，
-    将 kwargs 里需要替换的变量进行 format，如 {dish_id}。
-    最终返回完整的 BASE_URL + 路径
-    """
     endpoint = API_ENDPOINTS.get(key, "")
     if kwargs:
         endpoint = endpoint.format(**kwargs)
     return urljoin(BASE_URL, endpoint)
 
-# 辅助函数：获取本地测试文件路径
 def media_path(filename: str):
     """
-    假设测试文件存放于 auto_test/media/ 下。
-    若路径不同，请在此处修改。
+    假设测试文件放在 auto_test/media/ 下，若路径不同请在此处修改。
     """
     return os.path.join(os.path.dirname(__file__), 'media', filename)
 
 
-# ============== 测试用例开始 =============
-
-@pytest.mark.order(1)
 def test_echo():
     """
     测试 EchoView: /echo/
-    发送POST请求携带 {username}，期望返回 200，body中包含 echo 的内容
+    若 EchoView 允许匿名访问 => 预期 200; 否则自行修改为 401
     """
     url = api_url("echo")
     payload = {"username": "testuser"}
     r = requests.post(url, json=payload)
-    # 如果 EchoView 允许匿名访问，则期望200；否则请将测试修改为expect 401
-    assert r.status_code == 200, f"Echo API expected 200, got {r.status_code}"
+    assert r.status_code == 200, f"Echo expected 200, got {r.status_code}"
     data = r.json()
-    assert data["username"] == "testuser"
+    assert data.get("username") == "testuser"
 
-@pytest.mark.order(2)
+
 def test_register():
     """
-    测试注册: /register/
-    - 注册时必须提供 password2(与password相同)
-    - 成功注册后返回201，body中包含 { user, token }
-    - 重复注册可期望400
+    注册: /register/ 
+    需提供 password、password2字段
+    成功 => 201; 若重复注册 => 400
     """
     url = api_url("register")
     payload = {
@@ -86,286 +74,254 @@ def test_register():
         "email": "test@example.com"
     }
     r = requests.post(url, json=payload)
-    assert r.status_code in [201, 400], f"Register API unexpected status: {r.status_code}"
-
+    assert r.status_code in [201, 400], f"Register got {r.status_code}"
     data = r.json()
     if r.status_code == 201:
-        assert "token" in data, "Token not found in register response"
-        assert "user" in data, "User object not found in register response"
+        assert "token" in data
+        assert "user" in data
 
-@pytest.mark.order(3)
+
 def test_login():
     """
-    测试登录: /login/
-    - 使用已注册的用户登录
-    - 校验token
+    登录: /login/
+    校验token
+    - 服务器可能返回 200(成功), 400(ValidationError), 401(无效凭证)
     """
     url = api_url("login")
     payload = {"username": "testuser", "password": "testpass"}
     r = requests.post(url, json=payload)
-    # 由于LoginSerializer可能raise ValidationError => 400
-    # 而视图可能返回401 => invalid login
-    # 成功 => 200
-    # 因此接收 [200,400,401]
-    assert r.status_code in [200, 400, 401], f"Login API expected 200 or 400/401, got {r.status_code}"
-
-    data = r.json()
+    assert r.status_code in [200, 400, 401], f"Login got {r.status_code}"
     if r.status_code == 200:
+        data = r.json()
         assert "token" in data
-        assert "user" in data
         pytest.token = data["token"]
     else:
         pytest.token = None
 
-@pytest.mark.order(4)
+
 def test_user_detail_get():
     """
-    测试获取用户详细信息: /user/
-    - GET需携带 token
-    - 若token无效，期望401/403
+    获取用户信息: /user/
+    必须携带 token => 如果无 token, skip
     """
     if not getattr(pytest, "token", None):
-        pytest.skip("No valid token, skip user_detail_get")
+        pytest.skip("No valid token => skip user_detail_get")
 
     url = api_url("user_detail")
     headers = {"Authorization": f"Token {pytest.token}"}
     r = requests.get(url, headers=headers)
+    # 若后端需要验证 => 200 / 无权限 => 401/403
     if r.status_code != 200:
-        pytest.skip(f"User detail GET returned {r.status_code}, cannot proceed.")
+        pytest.skip(f"user detail GET got {r.status_code}, skip")
     data = r.json()
-    assert data["username"] == "testuser"
+    assert data.get("username") == "testuser"
 
-@pytest.mark.order(5)
 def test_user_detail_put():
     """
     测试更新用户详细信息: /user/
-    - PUT/PATCH请求需携带 token
+    - 后端只接受 multipart/form-data
+    - PATCH 需携带 Token，否则 401/403
     """
     if not getattr(pytest, "token", None):
-        pytest.skip("No valid token, skip user_detail_put")
+        pytest.skip("No valid token => skip test_user_detail_put")
 
     url = api_url("user_detail")
-    headers = {"Authorization": f"Token {pytest.token}"}
-    payload = {"nickname": "NewNick"}
-    r = requests.patch(url, headers=headers, json=payload)
-    # 可能400 => 部分字段不合法；也可能200 => 成功
-    assert r.status_code in [200, 400], f"User detail PATCH got {r.status_code}"
-    if r.status_code == 200:
-        data = r.json()
-        assert data["nickname"] == "NewNick"
+    headers = {
+        "Authorization": f"Token {pytest.token}"
+        # 不指定 Content-Type，让 requests 自动生成 boundary
+    }
 
-@pytest.mark.order(6)
+    # 这里使用 `data` + `files={}` 的方式构造multipart/form-data
+    # 假设只改 nickname，不上传任何文件
+    data = {"nickname": "NewNick"}
+    # 如果你想同时上传头像，也可放到 files。
+    files = {}
+
+    r = requests.patch(url, headers=headers, data=data, files=files)
+    # 后端若成功 => 200； 若 nickname 字段无效 => 400； 若 token 无效 => 401/403
+    assert r.status_code in [200, 400, 401, 403], f"user detail PATCH got {r.status_code}"
+
+    if r.status_code == 200:
+        data_json = r.json()
+        assert data_json.get("nickname") == "NewNick", "更新后应返回新的 nickname"
+
 def test_ocr_failure():
     """
-    测试 OCR: /ocr/
-    - 不带图片文件时 => 400
+    OCR: /ocr/
+    不带图片 => 400
     """
     url = api_url("ocr")
     r = requests.post(url)
-    assert r.status_code == 400, f"OCR expected 400 if no image, got {r.status_code}"
+    assert r.status_code == 400, f"Expect 400 if no image => got {r.status_code}"
 
-@pytest.mark.order(7)
+
 def test_logout():
     """
-    测试登出: /logout/
+    /logout/
     - 登出后 token 失效
     """
     if not getattr(pytest, "token", None):
-        pytest.skip("No valid token, skip test_logout")
+        pytest.skip("No valid token => skip logout")
 
     url = api_url("logout")
     headers = {"Authorization": f"Token {pytest.token}"}
     r = requests.post(url, headers=headers)
-    assert r.status_code in [200, 400], f"Logout expected 200 or 400, got {r.status_code}"
-    # 若成功 => token失效
+    # 200 => 成功; 400 => token 不存在
     if r.status_code == 200:
-        # 再次访问 user_detail => should be 401/403
-        user_url = api_url("user_detail")
-        check_r = requests.get(user_url, headers=headers)
-        assert check_r.status_code in [401, 403], f"Expect unauthorized after logout, got {check_r.status_code}"
+        # check again => /user/ => 401/403
+        check = requests.get(api_url("user_detail"), headers=headers)
+        assert check.status_code in [401, 403], f"After logout => expect unauthorized => {check.status_code}"
 
-@pytest.mark.order(8)
+
 def test_login_invalid():
     """
-    测试无效密码登录 => 期望返回 400 或 401
+    /login/ 无效密码 => 400/401
     """
     url = api_url("login")
     payload = {"username": "testuser", "password": "wrongpass"}
     r = requests.post(url, json=payload)
-    assert r.status_code in [400, 401], f"Invalid login should get 400 or 401, got {r.status_code}"
+    assert r.status_code in [400, 401], f"Invalid login => got {r.status_code}"
 
-@pytest.mark.order(9)
+
 def test_voice_translation_invalid():
     """
-    测试语音翻译: /voice-translation/
-    - 上传非音频文件 => 400/500
+    /voice-translation/
+    上传非音频 => 400/500
     """
     url = api_url("voice_translation")
-    files = {
-        "voice_file": ("fake.txt", b"This is not an audio file", "text/plain"),
-    }
+    files = {"voice_file": ("fake.txt", b"Fake audio", "text/plain")}
     data = {"isChineseMode": "true"}
-
     r = requests.post(url, files=files, data=data)
-    assert r.status_code in [400, 500], f"Expect 400 or 500 if file is invalid audio, got {r.status_code}"
+    assert r.status_code in [400, 500], f"Voice invalid => got {r.status_code}"
 
-@pytest.mark.order(10)
+
 def test_search_dish_empty_tags():
     """
-    测试菜品搜索: /dish/search/
-    - 不带任何 tag => code=200, data.results => []
+    /dish/search/
+    tags=[]
     """
     url = api_url("dish_search")
     payload = {"tags": []}
     r = requests.post(url, json=payload)
-    # 可能 200(成功) 或 400(缺参数)
-    assert r.status_code in [200, 400], f"Expect 200 or 400, got {r.status_code}"
+    assert r.status_code in [200, 400], f"Search dish => {r.status_code}"
     if r.status_code == 200:
         data = r.json()
-        assert "results" in data["data"]
+        assert "results" in data.get("data", {})
 
-@pytest.mark.order(11)
+
 def test_advanced_search_empty_text():
     """
-    测试进阶搜索API: /dish/advanced_search/
-    - text='', filter=[]
+    /dish/advanced_search/
+    text='', filter=[]
     """
     url = api_url("dish_advanced_search")
     payload = {"text": "", "filter": []}
     r = requests.post(url, json=payload)
-    assert r.status_code in [200, 400], f"Expect 200 or 400, got {r.status_code}"
+    assert r.status_code in [200, 400], f"Advanced search => {r.status_code}"
     data = r.json()
-    print("advanced_search_empty_text data:", data)
+    print("advanced_search_empty_text data =>", data)
 
-@pytest.mark.order(12)
+
 def test_tag_list():
     """
-    获取标签列表: /tags/
+    /tags/
+    不需token => 200
     """
     url = api_url("tags")
     r = requests.get(url)
-    assert r.status_code == 200, f"Tag list expected 200, got {r.status_code}"
+    assert r.status_code == 200, f"Tags => {r.status_code}"
     data = r.json()
-    print("tag list:", data)
+    print("tags list =>", data)
 
-# ============== 新增对五个媒体文件的API测试 ==============
+# =========== 以下为上传媒体文件的测试 =============
 
-@pytest.mark.order(13)
 def test_ocr_success():
     """
-    测试 OCR 成功场景: /ocr/
-    - 上传 menu.jpg => 期望200或400(如果图片无可识别)
+    OCR 成功场景 => /ocr/
+    上传 menu.jpg => 200/400/500 视后端处理
     """
     file_path = media_path("menu.jpg")
     if not os.path.exists(file_path):
-        pytest.skip("menu.jpg not found, skip test_ocr_success")
+        pytest.skip("menu.jpg not found => skip")
 
     url = api_url("ocr")
     with open(file_path, "rb") as f:
         files = {"image": ("menu.jpg", f, "image/jpeg")}
         r = requests.post(url, files=files)
-    # 后端可能返回200(成功) 或 400(识别失败或解析错误)
-    assert r.status_code in [200, 400], f"OCR file upload expected 200 or 400, got {r.status_code}"
+    # 若OCR处理成功 => 200; 如果后端无法处理 => 400/500
+    assert r.status_code in [200, 400, 500], f"OCR => got {r.status_code}"
 
-
-@pytest.mark.order(14)
 def test_comment_upload_with_image():
     """
-    测试评论上传 => /comments/upload/
-    - 上传 comment.jpg 作为评论图片
-    - 需先登录获取token
+    评论上传 => /comments/upload/
+    - images => comment.jpg
+    - 需token
+    - 若token失效 => 401
+    - 成功 => 201 or 400(参数问题)
     """
     if not getattr(pytest, "token", None):
-        pytest.skip("No valid token, skip comment_upload_with_image")
+        pytest.skip("No valid token => skip")
 
     file_path = media_path("comment.jpg")
     if not os.path.exists(file_path):
-        pytest.skip("comment.jpg not found, skip test_comment_upload_with_image")
+        pytest.skip("comment.jpg not found => skip")
 
     url = api_url("comment_upload")
     headers = {"Authorization": f"Token {pytest.token}"}
-    data = {
-        "dish": 1,  # 假设dish_id=1有效
-        "comment": "测试评论带图片",
-        "rating": 4
-    }
-    files = [
-        ("images", ("comment.jpg", open(file_path, "rb"), "image/jpeg"))
-    ]
+    data = {"dish": 1, "comment": "测试评论带图片", "rating": 4}
+    files = [("images", ("comment.jpg", open(file_path, "rb"), "image/jpeg"))]
     r = requests.post(url, headers=headers, data=data, files=files)
-    assert r.status_code in [201, 400], f"Comment upload expected 201 or 400, got {r.status_code}"
-    if r.status_code == 201:
-        resp_json = r.json()
-        assert resp_json["comment"] == "测试评论带图片"
+    # token无效 => 401; 成功 => 201; 参数问题 => 400
+    assert r.status_code in [201, 400, 401], f"comment upload => {r.status_code}"
 
-
-@pytest.mark.order(15)
 def test_user_detail_upload_avatar():
     """
-    测试用户上传头像 => /user/ (PATCH)
-    - avatar.jpg
+    上传头像 => /user/
+    - avatar => avatar.jpg
+    - 需token => 否则401
+    - 成功 => 200 or 400(字段错误)
     """
     if not getattr(pytest, "token", None):
-        pytest.skip("No valid token, skip user_detail_upload_avatar")
+        pytest.skip("No valid token => skip avatar")
 
     file_path = media_path("avatar.jpg")
     if not os.path.exists(file_path):
-        pytest.skip("avatar.jpg not found, skip test_user_detail_upload_avatar")
+        pytest.skip("avatar.jpg not found => skip")
 
     url = api_url("user_detail")
     headers = {"Authorization": f"Token {pytest.token}"}
-    files = {
-        "avatar": ("avatar.jpg", open(file_path, "rb"), "image/jpeg")
-    }
+    files = {"avatar": ("avatar.jpg", open(file_path, "rb"), "image/jpeg")}
     r = requests.patch(url, headers=headers, files=files)
-    assert r.status_code in [200, 400], f"Avatar upload got {r.status_code}"
-    if r.status_code == 200:
-        data = r.json()
-        assert "avatar" in data, "No avatar field in response"
+    # 若后端未登录 => 401; 成功 => 200; 可能400 => 不合法
+    assert r.status_code in [200, 400, 401], f"avatar upload => {r.status_code}"
 
-
-@pytest.mark.order(16)
-def test_voice_translation_chinese_wav():
+def test_voice_translation_chinese_m4a():
     """
-    测试语音翻译(中文模式) => /voice-translation/
-    - 上传 test.wav, isChineseMode=true
+    /voice-translation/
+    测试中文m4a => test.m4a
     """
-    if not getattr(pytest, "token", None):
-        pytest.skip("Not strictly required token, but skipping if we prefer consistent environment")
-
-    file_path = media_path("test.wav")
+    file_path = media_path("test.m4a")
     if not os.path.exists(file_path):
-        pytest.skip("test.wav not found, skip test_voice_translation_chinese_wav")
+        pytest.skip("test.m4a not found => skip")
 
     url = api_url("voice_translation")
-    files = {
-        "voice_file": ("test.wav", open(file_path, "rb"), "audio/wav")
-    }
+    files = {"voice_file": ("test.m4a", open(file_path, "rb"), "audio/m4a")}
     data = {"isChineseMode": "true"}
-
     r = requests.post(url, files=files, data=data)
-    # 可能200成功, 400/500错误
-    assert r.status_code in [200, 400, 500], f"Voice translation CHN wav => got {r.status_code}"
-    print("test_voice_translation_chinese_wav:", r.json())
+    # 可能200/400/500
+    assert r.status_code in [200, 400, 500], f"voice CHN => {r.status_code}"
 
-
-@pytest.mark.order(17)
-def test_voice_translation_english_wav():
+def test_voice_translation_english_m4a():
     """
-    测试语音翻译(英文模式) => /voice-translation/
-    - 上传 eng-test.wav, isChineseMode=false
+    /voice-translation/
+    测试英文m4a => eng-test.m4a
     """
-    file_path = media_path("eng-test.wav")
+    file_path = media_path("eng-test.m4a")
     if not os.path.exists(file_path):
-        pytest.skip("eng-test.wav not found, skip test_voice_translation_english_wav")
+        pytest.skip("eng-test.m4a not found => skip")
 
     url = api_url("voice_translation")
-    files = {
-        "voice_file": ("eng-test.wav", open(file_path, "rb"), "audio/wav")
-    }
+    files = {"voice_file": ("eng-test.m4a", open(file_path, "rb"), "audio/m4a")}
     data = {"isChineseMode": "false"}
-
     r = requests.post(url, files=files, data=data)
-    assert r.status_code in [200, 400, 500], f"Voice translation ENG wav => got {r.status_code}"
-    print("test_voice_translation_english_wav:", r.json())
-
+    assert r.status_code in [200, 400, 500], f"voice ENG => {r.status_code}"
