@@ -51,7 +51,7 @@ DEBUG = True
 
 # backend/backend/settings.py
 
-ALLOWED_HOSTS = ['1.15.174.177', 'localhost', '127.0.0.1','apd-ugcvlive.apdcdn.tc.qq.com']
+ALLOWED_HOSTS = ['1.15.174.177', 'localhost', '127.0.0.1','apd-ugcvlive.apdcdn.tc.qq.com','apd-vlive.apdcdn.tc.qq.com','cultralcompass.xyz']
 
 
 # Application definition

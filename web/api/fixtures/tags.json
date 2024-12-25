@@ -26,7 +26,13 @@
 
     {"name": "发酵", "name_en": "Fermented"},
     {"name": "油炸", "name_en": "Fried"},
-    {"name": "火锅", "name_en": "Hot Pot"}
+    {"name": "火锅", "name_en": "Hot Pot"},
+    {"name": "调味品", "name_en": "Seasoning"},
+    {"name": "含芝麻", "name_en": "Sesame"},
+
+    {"name":"鸡蛋", "name_en": "Egg"},
+    {"name":"烘焙", "name_en": "Baking"}
+
 
  
 ]

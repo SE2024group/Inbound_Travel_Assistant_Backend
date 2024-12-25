@@ -38,7 +38,7 @@ def create_initial_data(apps, schema_editor):
             }
         )
         # 添加标签
-        dish_tags = [tag_objects[tag_name] for tag_name in dish_data['tags']]
+        dish_tags = [tag_objects[tag_name] for tag_name in dish_data['tags'] if tag_name in tag_objects]
         dish.tags.set(dish_tags)
 
         # 添加图片
