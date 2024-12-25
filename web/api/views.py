@@ -160,7 +160,6 @@ class UserDetailView(generics.RetrieveUpdateAPIView):
         return self.request.user
 
     def update(self, request, *args, **kwargs):
-        print("Update user info")
         partial = kwargs.pop('partial', True)  # 允许部分更新
         instance = self.get_object()
 
@@ -207,7 +206,6 @@ class UserDetailView(generics.RetrieveUpdateAPIView):
 
         # 日志记录
         if 'avatar' in request.FILES:
-            print(f"User {instance.username} uploaded avatar: {instance.avatar}")
             logging.info(f"User {instance.username} uploaded avatar: {instance.avatar}")
 
         return Response(serializer.data)
@@ -258,7 +256,6 @@ class OCRView(APIView):
             base64_image = base64.b64encode(image_content).decode('utf-8')
 
             content_type = image.content_type
-            print(content_type)
 
             # 调用 OCR API
             ocr_api_url = 'https://api.ocr.space/parse/image'
@@ -277,7 +274,6 @@ class OCRView(APIView):
                 response = requests.post(ocr_api_url, data=payload, headers=headers, timeout=30)
                 response.raise_for_status()
                 ocr_result = response.json()
-                print(ocr_result)
             except requests.RequestException as e:
                 return Response({'error': 'OCR API request failed'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -370,7 +366,6 @@ class OCRView(APIView):
                             # 没有匹配成功，也没有遇到非中文字符的打断，则 i += 1
                             i += 1
 
-            print(result_data)
             return Response({'results': result_data}, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -501,7 +496,6 @@ class VoiceTranslationView(APIView):
             voice_file = serializer.validated_data['voice_file']
             is_chinese_mode = serializer.validated_data['isChineseMode']
 
-            print("is_chinese_mode:", is_chinese_mode)
 
             # 使用临时文件保存上传的语音文件
             with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(voice_file.name)[1]) as temp_file:
@@ -528,7 +522,6 @@ class VoiceTranslationView(APIView):
                 # 使用 Azure 语音服务进行转录
                 transcribed_text = azure_speech_to_text(audio_file_to_use, language=language)
 
-                print(f"Transcribed text: {transcribed_text}")
 
                 logger.info(f"Transcribed text: {transcribed_text}")
 
@@ -539,7 +532,6 @@ class VoiceTranslationView(APIView):
                 else:
                     translated_text = translate_text(transcribed_text, from_lang="EN", to_lang="ZH")
 
-                print(f"Translated text: {translated_text}")
 
                 response_data = {
                     "code": 200,
