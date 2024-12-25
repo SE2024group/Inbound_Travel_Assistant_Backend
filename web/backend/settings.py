@@ -19,7 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # 初始化环境变量
 env = environ.Env(
-    DEBUG=(bool, True)
+    DEBUG=(bool, False)
 )
 
 # 读取 .env 文件
@@ -47,7 +47,7 @@ AZURE_SPEECH_REGION = env('AZURE_SPEECH_REGION')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # backend/backend/settings.py
 
